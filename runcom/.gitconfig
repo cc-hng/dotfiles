@@ -1,0 +1,9 @@
+[user]
+	email = cc@l2x.top
+	name = cc
+[core]
+	excludesfile = ~/.local/secret/.gitignore
+[https]
+	proxy = http://127.0.0.1:1081
+[commit]
+	template = ~/.local/secret/git_template.txt
