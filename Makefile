@@ -9,30 +9,31 @@ export STOW_DIR := $(DOTFILES_DIR)
 
 all: $(OS)
 
-macos: core-macos packages link
+macos: core-macos packages-macos link
 
-linux: core-linux link
+linux: core-linux packages-linux link
 
-core-macos: brew git node ruby
+core-macos: brew git ruby
 
 core-linux:
-	apt-get update
-	apt-get upgrade -y
-	apt-get dist-upgrade -f
+	linux-update
 
 stow-macos: brew
 	is-executable stow || brew install stow
 
 stow-linux: core-linux
-	is-executable stow || apt-get -y install stow
+	is-executable stow || linux-install stow
 
-packages: brew-packages cask-apps node-packages
+packages-macos: brew-packages cask-apps node-packages
+packages-linux: linux-packages node-packages
 
 link: stow-$(OS)
   # curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh | bash
   # curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | bash
 	for FILE in $$(\ls -A runcom); do if [ -f $(HOME)/$$FILE -a ! -h $(HOME)/$$FILE ]; then \
 		mv -v $(HOME)/$$FILE{,.bak}; fi; done
+	for FILE in $$(\ls -A config); do if [ -d $(XDG_CONFIG_HOME)/$$FILE -a ! -h $(XDG_CONFIG_HOME)/$$FILE ]; then \
+		mv -v $(XDG_CONFIG_HOME)/$$FILE{,.bak}; fi; done
 	mkdir -p $(XDG_CONFIG_HOME)
 	stow -t $(HOME) runcom
 	stow -t $(XDG_CONFIG_HOME) config
@@ -42,6 +43,8 @@ unlink: stow-$(OS)
 	stow --delete -t $(XDG_CONFIG_HOME) config
 	for FILE in $$(\ls -A runcom); do if [ -f $(HOME)/$$FILE.bak ]; then \
 		mv -v $(HOME)/$$FILE.bak $(HOME)/$${FILE%%.bak}; fi; done
+	for FILE in $$(\ls -A config); do if [ -f $(XDG_CONFIG_HOME)/$$FILE.bak ]; then \
+		mv -v $(XDG_CONFIG_HOME)/$$FILE.bak $(XDG_CONFIG_HOME)/$${FILE%%.bak}; fi; done
 
 brew:
 	is-executable brew || curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh | bash
@@ -52,14 +55,14 @@ bash: SHELLS=/private/etc/shells
 git: brew
 	brew install git git-extras
 
-node: brew
-	is-executable node || brew install node
-
 ruby: brew
 	brew install ruby
 
 common:
-	cd $(DOTFILES_DIR)/install; ./common.sh
+	$(DOTFILES_DIR)/install/common.sh
+
+linux-packages:
+	$(DOTFILES_DIR)/install/linux.sh
 
 brew-packages: brew
 	brew bundle --file=$(DOTFILES_DIR)/install/Brewfile
@@ -67,6 +70,6 @@ brew-packages: brew
 cask-apps: brew
 	brew bundle --file=$(DOTFILES_DIR)/install/Caskfile || true
 
-node-packages: node
+node-packages:
 	npm install -g $(shell cat install/npmfile)
 

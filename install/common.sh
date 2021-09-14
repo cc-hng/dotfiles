@@ -1,28 +1,12 @@
 #!/bin/bash
 
-DOTFILES_ROOT=$(pwd -P)
-
 set -e
-
-info () {
-  printf "\r  [ \033[00;34m..\033[0m ] $1\n"
-}
-
-user () {
-  printf "\r  [ \033[0;33m??\033[0m ] $1\n"
-}
-
-success () {
-  printf "\r\033[2K  [ \033[00;32mOK\033[0m ] $1\n"
-}
-
-fail () {
-  printf "\r\033[2K  [\033[0;31mFAIL\033[0m] $1\n"
-  exit
-}
+cd "$(dirname "$0")/.."
+DOTFILES_ROOT=$(pwd -P)
+source "$DOTFILES_ROOT/script/log.sh"
 
 check_exe() {
-  if ! ../bin/is-executable $1; then
+  if ! ./bin/is-executable $1; then
     fail "$1 is not exist"
   fi
   info "$1 check ok"

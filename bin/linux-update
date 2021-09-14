@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -e
+cd "$(dirname "$0")/.."
+DOTFILES_ROOT=$(pwd -P)
+source "$DOTFILES_ROOT/script/log.sh"
+
+if [[ "$OSTYPE" =~ ^darwin ]]; then
+  fail 'os is macosx'
+fi
+
+source /etc/os-release
+case $ID in
+debian|ubuntu|devuan)
+  sudo apt update && sudo apt upgrade -y
+  ;;
+arch|manjaro)
+  yes | sudo pacman -Syu
+  ;;
+*)
+  fail "$ID is not supported"
+esac

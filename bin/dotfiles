@@ -14,8 +14,12 @@ sub_help () {
 }
 
 sub_update () {
-  brew update
-  brew upgrade
+  if is-macos; then
+    brew update
+    brew upgrade
+  else
+    linux-update
+  fi
   npm install npm -g
   npm update -g
   update_nvim
