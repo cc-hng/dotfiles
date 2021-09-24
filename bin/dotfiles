@@ -17,11 +17,14 @@ sub_update () {
   if is-macos; then
     brew update
     brew upgrade
+    npm install npm -g
+    npm update -g
   else
     linux-update
+    sudo npm install npm -g
+    sudo npm update -g
   fi
-  npm install npm -g
-  npm update -g
+  install-rls
   update_nvim
 }
 

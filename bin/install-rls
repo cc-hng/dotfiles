@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -ex
+
+temp_dir=$(mktemp -d /tmp/rls.XXXXXX)
+
+cd ${temp_dir}
+wget -q https://github.com/rust-analyzer/rust-analyzer/releases/download/nightly/rust-analyzer-x86_64-unknown-linux-gnu.gz
+gunzip rust-analyzer-x86_64-unknown-linux-gnu.gz
+mv rust-analyzer-x86_64-unknown-linux-gnu ${HOME}/.cargo/bin/rust-analyzer
+
+rm -rf ${temp_dir}

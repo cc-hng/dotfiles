@@ -2,9 +2,9 @@
 function fish_greeting
 end
 
-function cd
-  builtin cd $argv; and ls
-end
+#function cd
+#  builtin cd $argv; and ls
+#end
 
 set pure_symbol_prompt '~>'
 
@@ -20,6 +20,7 @@ set -x KUBECONFIG               /etc/rancher/k3s/k3s.yaml
 set -x GOPATH                   $HOME/.go
 set -x GOBIN                    $GOPATH/bin
 set -x ANDROID_NDK_HOME         /home/cc/.local/sdk/ndk
+set -x CPM_SOURCE_CACHE         $HOME/.cache/CPM
 
 set -x LC_ALL       en_US.UTF-8
 set -x LANG         en_US.UTF-8
@@ -96,8 +97,8 @@ alias hexdump='hexdump -C'
 alias grep=rg
 alias pip3='python3 -m pip'
 alias t=tmux
-alias tn='tmux new -s'
-alias to='tmux a -t'
+alias tn='env TERM=xterm-256color tmux new -s'
+alias to='env TERM=xterm-256color tmux a -t'
 alias d=docker
 alias dc='docker-compose'
 alias k=kubectl
@@ -117,4 +118,8 @@ function proxyoff --description "turn off a proxy"
     set -e http_proxy
     set -e https_proxy
     set -e no_proxy
+end
+
+if test -f $HOME/.local/secret/config.fish
+  . $HOME/.local/secret/config.fish
 end

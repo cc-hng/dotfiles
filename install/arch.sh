@@ -3,6 +3,7 @@
 # from ...
 yes | paru -S bat       \
     clang               \
+    libc++              \
     ccache              \
     ninja               \
     cmake               \
