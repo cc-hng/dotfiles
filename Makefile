@@ -30,11 +30,12 @@ packages-macos: brew
 	brew bundle --file=$(DOTFILES_DIR)/install/Brewfile
 	brew bundle --file=$(DOTFILES_DIR)/install/Caskfile || true
 	npm install -g $(shell cat install/npmfile)
+	$(DOTFILES_DIR)/install/common.sh
 
 packages-linux:
-	$(DOTFILES_DIR)/install/common.sh
 	$(DOTFILES_DIR)/install/linux.sh
 	sudo npm install -g $(shell cat install/npmfile)
+	$(DOTFILES_DIR)/install/common.sh
 
 link: stow-$(OS)
   # curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh | bash
