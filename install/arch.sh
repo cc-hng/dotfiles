@@ -2,6 +2,7 @@
 
 # from ...
 yes | paru -S bat       \
+    neovim              \
     clang               \
     libc++              \
     ccache              \

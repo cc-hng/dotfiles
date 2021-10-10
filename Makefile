@@ -13,7 +13,9 @@ macos: core-macos packages-macos link
 
 linux: core-linux packages-linux link
 
-core-macos: brew git ruby
+core-macos: brew
+	brew install git git-extras
+	brew install ruby
 
 core-linux:
 	linux-update
@@ -24,8 +26,15 @@ stow-macos: brew
 stow-linux: core-linux
 	is-executable stow || linux-install stow
 
-packages-macos: brew-packages cask-apps node-packages
-packages-linux: linux-packages node-packages
+packages-macos: brew
+	brew bundle --file=$(DOTFILES_DIR)/install/Brewfile
+	brew bundle --file=$(DOTFILES_DIR)/install/Caskfile || true
+	npm install -g $(shell cat install/npmfile)
+
+packages-linux:
+	$(DOTFILES_DIR)/install/common.sh
+	$(DOTFILES_DIR)/install/linux.sh
+	sudo npm install -g $(shell cat install/npmfile)
 
 link: stow-$(OS)
   # curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh | bash
@@ -51,25 +60,4 @@ brew:
 
 bash: BASH=/usr/local/bin/bash
 bash: SHELLS=/private/etc/shells
-
-git: brew
-	brew install git git-extras
-
-ruby: brew
-	brew install ruby
-
-common:
-	$(DOTFILES_DIR)/install/common.sh
-
-linux-packages:
-	$(DOTFILES_DIR)/install/linux.sh
-
-brew-packages: brew
-	brew bundle --file=$(DOTFILES_DIR)/install/Brewfile
-
-cask-apps: brew
-	brew bundle --file=$(DOTFILES_DIR)/install/Caskfile || true
-
-node-packages:
-	npm install -g $(shell cat install/npmfile)
 
