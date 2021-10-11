@@ -50,7 +50,7 @@ window:
   # Values for `decorations` (macOS only):
   #     - transparent: Title bar, transparent background and title bar buttons
   #     - buttonless: Title bar, transparent background, but no title bar buttons
-  decorations: buttonless
+  decorations: none
 
   # Startup Mode (changes require restart)
   #
@@ -129,7 +129,7 @@ font:
     #   - (Linux) monospace
     #   - (Windows) Consolas
     # family: Monaco
-    family: Cascadia Code
+    # family: Cascadia Code
     # family: Operator Mono Book
     # family: Microsoft Yahei Mono
     # family: SF Mono
