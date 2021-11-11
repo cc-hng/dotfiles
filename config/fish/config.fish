@@ -11,7 +11,7 @@ set pure_symbol_prompt '~>'
 # Environment
 #set -x CC                       /usr/bin/clang
 #set -x CXX                      /usr/bin/clang++
-set -x EDITOR                   vim
+set -x EDITOR                   nvim
 set -x TERM                     xterm-256color
 set -x XDG_CONFIG_HOME          $HOME/.config
 set -x VCPKG_HOME               $HOME/.local/bin/vcpkg
@@ -93,31 +93,43 @@ alias df="df -h"
 # Improve od for hexdump
 alias od='od -Ax -tx1z'
 alias hexdump='hexdump -C'
-
 alias grep=rg
 alias pip3='python3 -m pip'
-alias t=tmux
-alias tn='env TERM=xterm-256color tmux new -s'
-alias to='env TERM=xterm-256color tmux a -t'
 alias d=docker
 alias dc='docker-compose'
 alias k=kubectl
 alias adb=/opt/android-sdk/platform-tools/adb
 
 function stop
-    command ps -ef | rg $argv | rg -v rg | awk '{print $2}' | xargs -t -I {} kill -9 {}
+  command ps -ef | rg $argv | rg -v rg | awk '{print $2}' | xargs -t -I {} kill -9 {}
 end
 
+function to --description "tmux"
+  if test (count $argv) -ne 1
+    echo "maybe `to <session>'"
+    return -1
+  end
+
+  if contains $argv[1] (tmux ls -F "#{session_name}")
+    command env TERM=xterm-256color tmux a -t $argv
+  else
+    command env TERM=xterm-256color tmux new -s $argv
+  end
+end
+
+#complete -c to -s o -l output -a "yes no"
+# '"(tmux ls -F "#{session_name})"'
+
 function proxyon --description "turn on a proxy"
-    set -xg http_proxy http://127.0.0.1:1081
-    set -xg https_proxy http://127.0.0.1:1081
-    set -xg no_proxy kubernetes.docker.internal,localhost,127.0.0.1,mirrors.ustc.edu.cn,mirrors.tencentyun.com
+  set -xg http_proxy http://127.0.0.1:1081
+  set -xg https_proxy http://127.0.0.1:1081
+  set -xg no_proxy kubernetes.docker.internal,localhost,127.0.0.1,0.0.0.0,mirrors.ustc.edu.cn,mirrors.tencentyun.com
 end
 
 function proxyoff --description "turn off a proxy"
-    set -e http_proxy
-    set -e https_proxy
-    set -e no_proxy
+  set -e http_proxy
+  set -e https_proxy
+  set -e no_proxy
 end
 
 if test -f $HOME/.local/secret/config.fish
