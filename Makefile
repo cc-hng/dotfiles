@@ -7,6 +7,7 @@ export STOW_DIR := $(DOTFILES_DIR)
 
 .PHONY: all
 
+
 all: $(OS)
 
 macos: core-macos packages-macos link
