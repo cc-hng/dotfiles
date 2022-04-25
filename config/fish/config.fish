@@ -6,11 +6,20 @@ end
 #  builtin cd $argv; and ls
 #end
 
+function nvim --description "nvim"
+  if test (count $argv) -eq 0
+    command nvim .
+  else
+    command nvim $argv
+  end
+end
+
 set pure_symbol_prompt '~>'
 
 # Environment
 #set -x CC                       /usr/bin/clang
 #set -x CXX                      /usr/bin/clang++
+set -x LD_LIBRARY_PATH          /usr/local/lib $LD_LIBRARY_PATH
 set -x EDITOR                   nvim
 set -x TERM                     xterm-256color
 set -x XDG_CONFIG_HOME          $HOME/.config
@@ -25,7 +34,8 @@ set -x CPM_SOURCE_CACHE         $HOME/.cache/CPM
 set -x LC_ALL       en_US.UTF-8
 set -x LANG         en_US.UTF-8
 
-set -x PATH  $HOME/.cargo/bin    \
+set -x PATH  $HOME/.local/third-party/linux/release/bin \
+             $HOME/.cargo/bin    \
              $HOME/.local/bin    \
              $HOME/.dotfiles/bin \
              /usr/local/go/bin   \
@@ -70,7 +80,7 @@ set -x PATH  $HOME/.cargo/bin    \
 #set fish_pager_color_progress '00afff'  'cyan'
 
 
-alias ls=lsd
+alias drop='code -r'
 alias cat=bat
 alias vim='nvim'
 alias vi='nvim'
@@ -78,7 +88,7 @@ alias n='nvim'
 alias e='nvim'
 alias ee='nvim'
 #alias nvim-qt='nvim-qt --geometry 1800x1200'
-alias gonvim='~/Downloads/gonvim/gonvim.sh'
+#alias gonvim='~/Downloads/gonvim/gonvim.sh'
 alias lock='i3exit lock'
 
 # Better mv,  cp,  mkdir
