@@ -1,0 +1,6 @@
+#/usr/bin/env bash
+
+cd ~/.local/bin/vcpkg
+git pull --ff --ff-only
+./bootstrap-vcpkg.sh
+vcpkg upgrade --no-dry-run

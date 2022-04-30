@@ -12,30 +12,29 @@ all: $(OS)
 
 macos: core-macos packages-macos link
 
-linux: core-linux packages-linux link
+linux: packages-linux link
 
 core-macos: brew
 	brew install git git-extras
 	brew install ruby
 
-core-linux:
-	linux-update
-
 stow-macos: brew
 	is-executable stow || brew install stow
 
-stow-linux: core-linux
-	is-executable stow || linux-install stow
+stow-linux:
+	is-executable stow || exit 1
 
 packages-macos: brew
-	brew bundle --file=$(DOTFILES_DIR)/install/Brewfile
-	brew bundle --file=$(DOTFILES_DIR)/install/Caskfile || true
-	npm install -g $(shell cat install/npmfile)
+	brew bundle --file=$(DOTFILES_DIR)/install/macos/Brewfile
+	brew bundle --file=$(DOTFILES_DIR)/install/macos/Caskfile || true
+	$(DOTFILES_DIR)/install/install_zsh_plugin.sh
+	#npm install -g $(shell cat install/npmfile)
 	$(DOTFILES_DIR)/install/common.sh
 
 packages-linux:
-	$(DOTFILES_DIR)/install/linux.sh
-	sudo npm install -g $(shell cat install/npmfile)
+	$(DOTFILES_DIR)/install/linux/linux.sh
+	$(DOTFILES_DIR)/install/install_zsh_plugin.sh
+	#sudo -E npm install -g $(shell cat install/npmfile)
 	$(DOTFILES_DIR)/install/common.sh
 
 link: stow-$(OS)

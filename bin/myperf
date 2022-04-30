@@ -1,0 +1,105 @@
+#!/bin/bash
+
+BIN_NAME=$(basename "$0")
+COMMAND_NAME=$1
+
+flamegraph_dir="$HOME/.cache/flamegraph"
+
+check_command() {
+  if [ $# -lt 1 ]; then
+    echo "Expect perf with some command:"
+    echo "    $BIN_NAME <command> <subcommand>"
+    exit 1
+  fi
+
+  if ! command -v $1 > /dev/null; then
+    echo "Error command: $@"
+    exit 1
+  fi
+}
+
+check_flamegraph() {
+  if [ ! -d $flamegraph_dir ]; then
+    git clone https://github.com/brendangregg/FlameGraph $flamegraph_dir
+  fi
+}
+
+sub_help() {
+  echo "Usage: $BIN_NAME <command>"
+  echo
+  echo "Commands:"
+  echo "   svg           Generate flamegraph perf.svg"
+  echo "   txt           Generate cpu-percentage of symbol(function) perf_symbol.data"
+  echo "   all_svg       Generate flamegraph as svg, but system wide"
+  echo "   all_txt       Generate cpu-percentage of symbol(function) as txt, but system wide"
+  echo "   help          This help message"
+}
+
+sub_svg() {
+  check_command $@
+
+  temp_dir=$(mktemp -d /tmp/perf.XXXXXX)
+  set -x
+  sudo perf record --call-graph dwarf -o ${temp_dir}/perf.data $@
+  sudo perf script -i ${temp_dir}/perf.data > ${temp_dir}/perf.unfold
+  ${flamegraph_dir}/stackcollapse-perf.pl ${temp_dir}/perf.unfold > ${temp_dir}/perf.folded
+  ${flamegraph_dir}/flamegraph.pl $temp_dir/perf.folded > $PWD/perf.svg
+  set +x
+}
+
+sub_all_svg() {
+  record_time=10
+  if [ $2 ]; then
+    record_time=$2
+    echo "perf all record time is ${record_time}"
+  fi
+
+  temp_dir=$(mktemp -d /tmp/perf.XXXXXX)
+  set -x
+  sudo perf record --call-graph dwarf -o ${temp_dir}/perf.data -a sleep ${record_time}
+  sudo perf script -i ${temp_dir}/perf.data > ${temp_dir}/perf.unfold
+  ${flamegraph_dir}/stackcollapse-perf.pl ${temp_dir}/perf.unfold > ${temp_dir}/perf.folded
+  ${flamegraph_dir}/flamegraph.pl $temp_dir/perf.folded > $PWD/perf.svg
+  set +x
+}
+
+sub_txt() {
+  check_command $@
+
+  temp_dir=$(mktemp -d /tmp/perf.XXXXXX)
+  set -x
+  sudo perf record --call-graph dwarf -o ${temp_dir}/perf.data $@
+  sudo perf report -i ${temp_dir}/perf.data --no-children --sort comm,symbol > $PWD/perf_symbol.data
+  set +x
+}
+
+sub_all_txt() {
+  record_time=10
+  if [ $2 ]; then
+    record_time=$2
+    echo "perf all record time is ${record_time}"
+  fi
+
+
+  temp_dir=$(mktemp -d /tmp/perf.XXXXXX)
+  set -x
+  sudo perf record --call-graph dwarf -o ${temp_dir}/perf.data -a sleep ${record_time}
+  sudo perf report -i ${temp_dir}/perf.data --no-children --sort comm,symbol > $PWD/perf_symbol.data
+  set +x
+}
+
+check_flamegraph
+case $COMMAND_NAME in
+  "" | "-h" | "--help" | "help")
+    sub_help
+    ;;
+  *)
+    shift
+    sub_${COMMAND_NAME} $@
+    if [ $? = 127 ]; then
+      echo "'$COMMAND_NAME' is not a known command or has errors." >&2
+      sub_help
+      exit 1
+    fi
+    ;;
+esac

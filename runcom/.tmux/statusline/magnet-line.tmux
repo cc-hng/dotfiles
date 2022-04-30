@@ -2,7 +2,7 @@ OneDark='#282a36'
 NightOwl='#0F1D2A'
 Material='#263238'
 
-BACKGROUND_COLOR=$OneDark
+BACKGROUND_COLOR=$NightOwl
 INACTIVE_FG_COLOR='#5c6370'
 ACTIVE_FG_COLOR='#fac863'
 
@@ -13,7 +13,7 @@ set -g status-position top
 set-option -g status on
 set-option -g status-fg default
 set -g status-justify left
-set -g status-interval 1
+set -g status-interval 5
 
 # ------------------------------------------------------------------------------
 # components
@@ -40,14 +40,14 @@ battery="🔋 Batt: #{battery_color_fg}🔌 #{battery_remain}#[default]"
 
 cpu="#[fg=#b8cc1d,bold]CPU: #[default]#{cpu_fg_color}#{cpu_icon} #{cpu_percentage}#[default]"
 ram="#[fg=#884ad4,bold] RAM: #{ram_fg_color}#{ram_icon}#[default]"
-time="⏰ #[fg=#12b6db]%a %d %b %H:%M"
+time="#[fg=#12b6db]%H:%M "
 
 # prefix
-prefix="#{?client_prefix,🐠,}"
+prefix="#{?client_prefix,🐠 ,}"
 
 set -g status-left-length 80
 # Options -> ⧉ ❐
-set -g status-left "#{?client_prefix,#[fg=#ffffff bg=#22252B],#[fg=#e5c07b]} ❐ #S $separator"
+set -g status-left "#{?client_prefix,#[fg=#ffffff bg=#22252B],#[fg=#e5c07b]} ⧉ #S $separator"
 set -g status-right-length 70
 set -g status-right "$prefix $cpu $separator $ram $separator $time"
 

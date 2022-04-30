@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -ex
+# pip install -U `pip list --outdated | awk 'NR>2 {print $1}'`
+
+pip install -U pip
+pip install -U docker-compose cmake-language-server python-lsp-server cmake-format
