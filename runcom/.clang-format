@@ -18,7 +18,7 @@ AccessModifierOffset: -4
 # 左括号(左圆括号、左尖括号、左方括号)后的对齐: Align, DontAlign, AlwaysBreak(总是在左括号后换行)
 AlignAfterOpenBracket: Align
 # 结构体数组对齐
-AlignArrayOfStructures: Right
+AlignArrayOfStructures: Left
 # 连续赋值时，对齐所有等号
 AlignConsecutiveAssignments: true
 # 连续声明时，对齐所有声明的变量名
