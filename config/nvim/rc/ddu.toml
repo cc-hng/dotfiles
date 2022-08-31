@@ -44,26 +44,26 @@ call ddu#custom#patch_global({
     \   'sourceOptions': {
     \     '_': {
     \       'ignoreCase': v:true,
-    \       'matchers': ['matcher_substring'],
+    \       'matchers': ['matcher_matchfuzzy'],
     \     },
     \     'file_old': {
     \       'matchers': [
-    \         'matcher_substring', 'matcher_relative', 'matcher_hidden',
+    \         'matcher_matchfuzzy', 'matcher_relative', 'matcher_hidden',
     \       ],
     \     },
     \     'file_external': {
     \       'matchers': [
-    \         'matcher_substring', 'matcher_hidden',
+    \         'matcher_matchfuzzy', 'matcher_hidden',
     \       ],
     \     },
     \     'file_rec': {
     \       'matchers': [
-    \         'matcher_substring', 'matcher_hidden',
+    \         'matcher_matchfuzzy', 'matcher_hidden',
     \       ],
     \     },
     \     'file': {
     \       'matchers': [
-    \         'matcher_substring', 'matcher_hidden',
+    \         'matcher_matchfuzzy', 'matcher_hidden',
     \       ],
     \     },
     \     'dein': {
@@ -143,6 +143,11 @@ call ddu#custom#patch_global({
     \   'filterParams': {
     \     'matcher_substring': {
     \       'highlightMatched': 'Search',
+    \     },
+    \     'matcher_matchfuzzy': {
+    \       'highlightMatched': 'Search',
+    \       'limit': 100,
+    \       'matchseq': v:true,
     \     },
     \   }
     \ })
@@ -353,9 +358,9 @@ on_source = 'ddu.vim'
 repo = 'shun/ddu-source-rg'
 on_source = 'ddu.vim'
 
-[[plugins]]
-repo = 'Shougo/ddu-filter-matcher_substring'
-on_source = 'ddu.vim'
+# [[plugins]]
+# repo = 'Shougo/ddu-filter-matcher_substring'
+# on_source = 'ddu.vim'
 
 [[plugins]]
 repo = 'Shougo/ddu-filter-matcher_relative'
@@ -383,6 +388,10 @@ on_source = 'ddu.vim'
 
 [[plugins]]
 repo = 'Shougo/ddu-source-buffer'
+on_source = 'ddu.vim'
+
+[[plugins]]
+repo = 'Bakudankun/ddu-filter-matchfuzzy'
 on_source = 'ddu.vim'
 
 [[plugins]]

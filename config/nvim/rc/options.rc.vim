@@ -3,7 +3,7 @@
 "
 
 " Build encodings.
-let &fileencodings = 'ucs-bom,utf-8,iso-2022-jp-3,euc-jp,cp932'
+let &fileencodings = 'ucs-bom,utf-8,cp936'
 
 if has('multi_byte_ime')
   set iminsert=0 imsearch=0
