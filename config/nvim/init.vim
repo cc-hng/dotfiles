@@ -17,9 +17,9 @@ vim.defer_fn(function()
     set nu
     set rnu
     let g:nvcode_termcolors=256
-    color nvcode
+    " color nvcode
     " color palenight
-    " color base16-tokyo-night-dark
+    color base16-tokyo-night-dark
     hi Cursor cterm=reverse gui=reverse
   ]]
 

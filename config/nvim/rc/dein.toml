@@ -66,3 +66,6 @@ repo = 'ChristianChiarulli/nvcode-color-schemes.vim'
 
 [[plugins]]
 repo = 'RRethy/nvim-base16'
+
+[[plugins]]
+repo = 'lourenci/github-colors'
