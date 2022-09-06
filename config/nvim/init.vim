@@ -20,7 +20,9 @@ vim.defer_fn(function()
     " color nvcode
     " color palenight
     color base16-tokyo-night-dark
-    hi Cursor cterm=reverse gui=reverse
+    if !vimrc#is_gui_running()
+      hi Cursor cterm=reverse gui=reverse
+    endif
   ]]
 
   if get_git_pwd() ~= nil then

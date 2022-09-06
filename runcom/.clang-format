@@ -6,7 +6,7 @@ BasedOnStyle: Webkit
 ---
 Language: Cpp
 Standard: c++20
-ColumnLimit: 93
+ColumnLimit: 90
 TabWidth: 8
 IndentWidth: 4
 UseTab: Never
@@ -64,7 +64,7 @@ AlwaysBreakTemplateDeclarations: Yes
 # false表示函数实参要么都在同一行，要么都各自一行
 BinPackArguments: true
 # false表示所有形参要么都在同一行，要么都各自一行
-BinPackParameters: false
+BinPackParameters: true
 
 # 大括号换行，只有当 BreakBeforeBraces 设置为Custom时才有效
 BreakBeforeBinaryOperators: NonAssignment

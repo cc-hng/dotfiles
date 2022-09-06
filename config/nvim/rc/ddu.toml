@@ -2,7 +2,6 @@
 repo = 'Shougo/ddu.vim'
 depends = 'denops.vim'
 on_source = 'denops.vim'
-rev = 'v1.10.1'
 hook_add = '''
   nnoremap s<Space> <Cmd>Ddu
   \ -name=files file_rec

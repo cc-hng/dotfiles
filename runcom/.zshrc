@@ -308,7 +308,7 @@ alias hexdump='hexdump -C'
 alias vim="TERM=xterm-256color nvim --listen $HOME/.cache/nvim/server.pipe"
 #alias goneovim='~/Downloads/goneovim/goneovim &>/dev/null &'
 #alias gn=goneovim
-alias nvui='NVIM_GUI=1 nvui &'
+#alias nvui='NVIM_GUI=1 nvui &'
 
 if ! command -v fd > /dev/null; then
   alias fd=fdfind
@@ -388,7 +388,8 @@ _contains () {  # Check if space-separated list $1 contains line $2
 
 ee() {
   # NVIM_GUI=1 nvim-qt $@ &
-  neovide --multigrid $@
+  # neovide --multigrid $@
+  NVIM_GUI=1 nvui $@ &
 }
 
 stop() {

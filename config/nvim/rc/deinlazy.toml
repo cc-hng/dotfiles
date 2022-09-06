@@ -260,7 +260,6 @@ lua require "nvim_comment".setup {}
 
 [[plugins]]
 repo = 'kyazdani42/nvim-web-devicons'
-if = '!vimrc#is_gui_running()'
 on_lua = 'nvim-web-devicons'
 hook_add = '''
 lua require('nvim-web-devicons').setup {}
@@ -268,7 +267,6 @@ lua require('nvim-web-devicons').setup {}
 
 [[plugins]]
 repo = 'akinsho/bufferline.nvim'
-if = '!vimrc#is_gui_running()'
 on_lua = 'bufferline'
 depends = 'nvim-web-devicons'
 hook_add = '''

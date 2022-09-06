@@ -46,9 +46,15 @@ let g:neovide_cursor_vfx_mode = 'sonicboom'
 if exists('g:nvui')
   " set guifont=Courier\ 10\ Pitch:h14,VL\ Gothic:h14
   set guifont=CaskaydiaCove\ Nerd\ Font:h11
+  set lsp=2
   call rpcnotify(1, 'NVUI_ANIMATIONS_ENABLED', v:false)
   call rpcnotify(1, 'NVUI_CURSOR_HIDE_TYPE', v:true)
 
+  NvuiOpacity 0.93
+  NvuiScrollAnimationDuration 0.02
+
+  " autocmd MyAutoCmd InsertEnter * NvuiIMEEnable
+  " autocmd MyAutoCmd InsertEnter * NvuiIMEDisable
   " Note: nvui does not use 'titlestring'
   autocmd MyAutoCmd
         \ BufWritePost,TextChanged,TextChangedI,BufEnter,DirChanged *
