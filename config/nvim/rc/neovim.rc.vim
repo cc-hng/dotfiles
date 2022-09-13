@@ -45,13 +45,13 @@ let g:neovide_cursor_vfx_mode = 'sonicboom'
 " For nvui
 if exists('g:nvui')
   " set guifont=Courier\ 10\ Pitch:h14,VL\ Gothic:h14
-  set guifont=CaskaydiaCove\ Nerd\ Font:h11
+  set guifont=CaskaydiaCove\ Nerd\ Font:h13.5
   set lsp=2
-  call rpcnotify(1, 'NVUI_ANIMATIONS_ENABLED', v:false)
+  call rpcnotify(1, 'NVUI_ANIMATIONS_ENABLED', v:true)
   call rpcnotify(1, 'NVUI_CURSOR_HIDE_TYPE', v:true)
 
-  NvuiOpacity 0.93
-  NvuiScrollAnimationDuration 0.02
+  NvuiOpacity 0.95
+  NvuiScrollAnimationDuration 0.12
 
   " autocmd MyAutoCmd InsertEnter * NvuiIMEEnable
   " autocmd MyAutoCmd InsertEnter * NvuiIMEDisable
@@ -69,5 +69,5 @@ if has('win32')
   set guifont=Firge:h13
 else
   " set guifont=Courier\ 10\ Pitch:h14
-  set guifont=CaskaydiaCove\ Nerd\ Font:h10.5
+  set guifont=CaskaydiaCove\ Nerd\ Font:h13.5
 endif

@@ -286,7 +286,6 @@ zmodload zsh/mathfunc
 ######################################################################
 
 alias rm='rm -i'
-alias vi=nvim
 alias vim='nvim -u NONE'
 alias k=kubectl
 alias d=docker
@@ -386,10 +385,16 @@ _contains () {  # Check if space-separated list $1 contains line $2
   echo "$1" | tr ' ' '\n' | grep -F -x -q "$2"
 }
 
+vi() {
+  export NVIM_LISTEN_ADDRESS=1
+  nvim $@
+}
+
 ee() {
   # NVIM_GUI=1 nvim-qt $@ &
   # neovide --multigrid $@
-  NVIM_GUI=1 nvui $@ &
+  export NVIM_LISTEN_ADDRESS=1
+  NVIM_GUI=1 nvui --geometry=127x35 $@ &
 }
 
 stop() {
@@ -401,6 +406,11 @@ to() {
   if [ $# -ne 1 ]; then
     echo "Usage: $0 <session>";
     echo '  list all sessions by: tmux ls -F "#{session_name}"'
+    return;
+  fi
+
+  if [ "x$TMUX" != "x" ]; then
+    echo 'tmux has already been opened'
     return;
   fi
 
