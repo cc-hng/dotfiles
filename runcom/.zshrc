@@ -386,13 +386,13 @@ _contains () {  # Check if space-separated list $1 contains line $2
 }
 
 vi() {
-  NVIM_LISTEN_ADDRESS=1 nvim $@
+  nvim $@
 }
 
 ee() {
   # NVIM_GUI=1 nvim-qt $@ &
   # neovide --multigrid $@
-  NVIM_LISTEN_ADDRESS=1 NVIM_GUI=1 nvui --geometry=127x35 $@ &
+  NVIM_GUI=1 nvui --geometry=127x35 $@ &
 }
 
 stop() {

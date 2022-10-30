@@ -17,12 +17,17 @@ vim.defer_fn(function()
     set nu
     set rnu
     let g:nvcode_termcolors=256
-    " color nvcode
+    " color xoria
+    color nvcode
     " color palenight
-    color base16-tokyo-night-dark
+    " color base16-tokyo-night-dark
+    " color base16-tokyo-city-dark
     if !vimrc#is_gui_running()
       hi Cursor cterm=reverse gui=reverse
     endif
+
+    " for drop command
+    let $NVIM_LISTEN_ADDRESS=1
   ]]
 
   if get_git_pwd() ~= nil then
