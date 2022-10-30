@@ -42,6 +42,7 @@ set expandtab
 " Substitute <Tab> with blanks.
 " set tabstop=8
 " Spaces instead <Tab>.
+" set softtabstop=4
 " Autoindent width.
 set tabstop=4
 set softtabstop=2
@@ -68,11 +69,14 @@ set matchpairs+=<:>
 set hidden
 
 " Disable folding.
-set foldenable
-set foldmethod=indent
-set foldlevel=3
+set nofoldenable
+set foldmethod=manual
 " Show folding level.
-set foldcolumn=0
+if has('nvim')
+  set foldcolumn=auto:1
+else
+  set foldcolumn=1
+endif
 set fillchars=vert:\|
 set commentstring=%s
 
@@ -85,10 +89,10 @@ set isfname-==
 set isfname+=@-@
 
 " Keymapping timeout.
-set timeout timeoutlen=3000 ttimeoutlen=100
+set timeout timeoutlen=500 ttimeoutlen=100
 
 " CursorHold time.
-set updatetime=100
+set updatetime=500
 
 " Set swap directory.
 set directory-=.
@@ -126,8 +130,11 @@ function! s:mkdir_as_necessary(dir, force) abort
   endif
 endfunction
 
+" Use autofmt.
+" set formatexpr=autofmt#japanese#formatexpr()
+
 " Use blowfish2
-" Note: It seems 15ms overhead.
+" NOTE: It seems 15ms overhead.
 " https://dgl.cx/2014/10/vim-blowfish
 " if has('cryptv')
   "  set cryptmethod=blowfish2
@@ -135,6 +142,9 @@ endfunction
 
 " If true Vim master, use English help file.
 set helplang& helplang=en,ja
+
+set spelllang+=cjk
+set spelloptions+=camel
 
 " Default fileformat.
 set fileformat=unix
@@ -146,7 +156,7 @@ set fileformats=unix,dos,mac
 "
 
 " Disable menu.vim
-if vimrc#is_gui_running()
+if has('gui_running')
   set guioptions=Mc
 endif
 
@@ -159,17 +169,29 @@ else
 endif
 
 " Always disable statusline.
-set laststatus=2
+set laststatus=0
+
+" Disable statusline when command line
+"autocmd MyAutoCmd CmdlineEnter * set laststatus=0 | redrawstatus
+"autocmd MyAutoCmd CmdlineLeave * set laststatus=2
+
 " Height of the command line.
 try
   set cmdheight=0
+
+  " For recording messages
+  autocmd MyAutoCmd RecordingEnter * set cmdheight=1
+  autocmd MyAutoCmd RecordingLeave * set cmdheight=0
 catch
   set cmdheight=1
 endtry
+
 " Not show command on statusline.
-" set noshowcmd
+set noshowcmd
 " Disable ruler
-" set noruler
+set noruler
+" Does not report lines
+set report=1000
 
 " Show title.
 set title
@@ -182,15 +204,9 @@ let &g:titlestring =
 set showtabline=0
 
 " Set statusline.
-let &g:statusline="%{winnr('$')>1?'['.winnr().'/'.winnr('$')"
-      \ . ".(winnr('#')==winnr()?'#':'').']':''}\ "
-      \ . "%{(&previewwindow?'[preview] ':'').expand('%:t')}"
-      \ . "\ %=%{(winnr('$')==1 || winnr('#')!=winnr()) ?
-      \ '['.(&filetype!=''?&filetype.',':'')"
-      \ . ".(&fenc!=''?&fenc:&enc).','.&ff.']' : ''}"
-      \ . "%m%{printf('%'.(len(line('$'))+2).'d/%d',line('.'),line('$'))}"
+set statusline=%{repeat('─',winwidth('.'))}
 
-" Note: wrap option is very slow!
+" NOTE: wrap option is very slow!
 set nowrap
 " Turn down a long line appointed in 'breakat'
 set linebreak
@@ -262,9 +278,6 @@ endif
 " Use "/" for path completion
 set completeslash=slash
 
-" Report changes.
-set report=0
-
 " Maintain a current line at the time of movement as much as possible.
 set nostartofline
 
@@ -281,6 +294,10 @@ set winheight=1
 set cmdwinheight=5
 " No equal window size.
 set noequalalways
+if exists('+splitscroll')
+  " Disable scroll when split
+  set nosplitscroll
+endif
 
 " Adjust window size of preview and help.
 set previewheight=8
@@ -307,16 +324,26 @@ set signcolumn=no
 
 " Disable cmdwin
 set cedit=
-"set cedit=<C-q>
 
 set redrawtime=0
 
 " Enable true color
-if exists('+termguicolors')
+if exists('+termguicolors') && !has('gui_running')
   set termguicolors
 endif
 
+" I use <C-w> in terminal mode
+if exists('+termwinkey')
+  set termwinkey=<C-L>
+endif
+
+" Colorscheme
+colorscheme candy
+
 " set cursorline
 set scrolloff=5
-" Colorscheme
-" colorscheme candy
+
+set nu
+set rnu
+set cursorline
+set mouse=ni

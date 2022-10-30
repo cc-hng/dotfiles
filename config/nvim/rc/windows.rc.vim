@@ -9,7 +9,7 @@ endif
 
 " Change colorscheme.
 " Don't override colorscheme.
-if !vimrc#is_gui_running() && !has('nvim')
+if !has('gui_running') && !has('nvim')
   set t_Co=256
 
   if exists('$ConEmuPID')

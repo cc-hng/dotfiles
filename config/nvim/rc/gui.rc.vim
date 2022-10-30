@@ -27,9 +27,8 @@ if has('win32')
   set lines=55
 else
   " For Linux.
-  " set guifontwide=VL\ Gothic\ 13
-  " set guifont=Courier\ 10\ Pitch\ 14
-  set guifont=CaskaydiaCove\ Nerd\ Font:h10
+  set guifontwide=VL\ Gothic\ 13
+  set guifont=Courier\ 10\ Pitch\ 14
 
   if &columns < 170
     " Width of window.

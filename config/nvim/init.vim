@@ -1,6 +1,6 @@
 execute 'source' fnamemodify(expand('<sfile>'), ':h').'/rc/vimrc'
 
-" defer settings
+" defer
 lua <<EOF
 local function get_git_pwd()
   local git_pwd = vim.fn.systemlist('git rev-parse --show-toplevel')[1]
@@ -12,20 +12,7 @@ end
 
 vim.defer_fn(function()
   vim.cmd [[
-    set cursorline
-    set mouse=ni
-    set nu
-    set rnu
-    let g:nvcode_termcolors=256
-    " color xoria
     color nvcode
-    " color palenight
-    " color base16-tokyo-night-dark
-    " color base16-tokyo-city-dark
-    if !vimrc#is_gui_running()
-      hi Cursor cterm=reverse gui=reverse
-    endif
-
     " for drop command
     let $NVIM_LISTEN_ADDRESS=1
   ]]

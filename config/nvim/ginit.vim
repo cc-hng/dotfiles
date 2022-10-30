@@ -23,12 +23,5 @@ elseif exists('g:GtkGuiLoaded')
 
   call rpcnotify(1, 'Gui', 'Font', 'DejaVu Sans Mono 15')
 elseif exists(':GuiFont')
-  " GuiFont! Courier\ 10\ Pitch:h14
-  if has('mac')
-    GuiFont! CaskaydiaCove\ Nerd\ Font:h14
-  else
-    GuiFont! CaskaydiaCove\ Nerd\ Font:h12
-  endif
+  GuiFont! Courier\ 10\ Pitch:h14
 endif
-
-set lsp=2

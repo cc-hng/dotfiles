@@ -10,12 +10,6 @@ if &compatible
   set nocompatible
 endif
 
-if has('nvim')
-  " Use filetype.lua instead
-  let g:do_filetype_lua = 1
-  let g:did_load_filetypes = 0
-endif
-
 " Set augroup.
 augroup MyAutoCmd
   autocmd!
@@ -38,9 +32,7 @@ if !isdirectory($CACHE)
 endif
 
 " Use English interface.
-if !vimrc#is_gui_running()
-  language message C
-endif
+language message C
 
 if filereadable(expand('~/.secret_vimrc'))
   source ~/.secret_vimrc
@@ -68,8 +60,8 @@ let g:dein#auto_recache = !has('win32')
 
 let g:dein#lazy_rplugins = v:true
 let g:dein#install_progress_type = 'floating'
-let g:dein#install_check_diff = v:false
-let g:dein#enable_notification = v:false
+let g:dein#install_check_diff = v:true
+let g:dein#enable_notification = v:true
 let g:dein#install_check_remote_threshold = 24 * 60 * 60
 let g:dein#auto_remote_plugins = v:false
 let g:dein#install_copy_vim = has('nvim')
@@ -81,7 +73,7 @@ if dein#min#load_state(s:path)
   let g:dein#inline_vimrcs = ['options.rc.vim', 'mappings.rc.vim']
   if has('nvim')
     call add(g:dein#inline_vimrcs, 'neovim.rc.vim')
-  elseif vimrc#is_gui_running()
+  elseif has('gui_running')
     call add(g:dein#inline_vimrcs, 'gui.rc.vim')
   endif
   if has('win32')
@@ -96,6 +88,8 @@ if dein#min#load_state(s:path)
   let s:dein_ddc_toml = s:base_dir . 'ddc.toml'
   let s:dein_ddu_toml = s:base_dir . 'ddu.toml'
   let s:dein_ft_toml = s:base_dir . 'deinft.toml'
+  let s:dein_neovim_toml = s:base_dir . 'neovim.toml'
+  let s:dein_vim_toml = s:base_dir . 'vim.toml'
 
   call dein#begin(s:path, [
         \ expand('<sfile>'), s:dein_toml, s:dein_lazy_toml, s:dein_ft_toml
@@ -105,13 +99,20 @@ if dein#min#load_state(s:path)
   call dein#load_toml(s:dein_lazy_toml, {'lazy' : 1})
   call dein#load_toml(s:dein_ddc_toml, {'lazy' : 1})
   call dein#load_toml(s:dein_ddu_toml, {'lazy' : 1})
+  if has('nvim')
+    call dein#load_toml(s:dein_neovim_toml, {'lazy' : 1})
+  else
+    call dein#load_toml(s:dein_vim_toml, {'lazy' : 1})
+  endif
   call dein#load_toml(s:dein_ft_toml)
 
   if filereadable('vimrc_local.vim')
     " Load develop version plugins.
     call dein#local(getcwd(),
-          \ {'frozen': 1, 'merged': 0},
-          \ ['ddc-*', 'ddu-*', 'vim*', 'nvim-*', 'neco-*', '*.vim', '*.nvim'])
+          \ {'frozen': 1, 'merged': 0}, [
+          \ 'ddc-*', 'ddu-*', 'vim*', 'nvim-*', 'neco-*',
+          \ '*.vim', '*.nvim', 'skkeleton',
+          \ ])
   endif
 
   call dein#end()
@@ -126,4 +127,3 @@ if !empty(argv())
 endif
 
 set secure
-

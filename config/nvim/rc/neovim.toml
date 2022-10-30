@@ -1,0 +1,297 @@
+[[plugins]]
+repo = 'nvim-treesitter/nvim-treesitter'
+if = '!has("win32")'
+on_event = 'BufRead'
+hook_post_update = 'TSUpdate'
+lua_source = '''
+  require'nvim-treesitter.configs'.setup {
+      ensure_installed = 'all',
+      additional_vim_regex_highlighting = false,
+      highlight = {
+          enable = true,
+            disable = function(lang, buf)
+                if lang == 'help' then
+                  return true
+                end
+                local max_filesize = 100 * 1024 -- 100 KB
+                local ok, stats = pcall(vim.loop.fs_stat,
+                                        vim.api.nvim_buf_get_name(buf))
+                if ok and stats and stats.size > max_filesize then
+                    return true
+                end
+            end,
+      },
+  }
+'''
+
+#[[plugins]]
+#repo = 'VonHeikemen/fine-cmdline.nvim'
+#depends = 'nui.nvim'
+#on_lua = 'fine-cmdline'
+#lua_source = '''
+#  require'fine-cmdline'.setup {
+#    cmdline = {
+#      enable_keymaps = false
+#    },
+#    popup = {
+#      buf_options = {
+#        filetype = 'FineCmdlinePrompt'
+#      },
+#    },
+#    hooks = {
+#      before_mount = function(input)
+#        input.input_props.prompt = ''
+#      end,
+#      set_keymaps = function(imap, feedkeys)
+#        local fn = require('fine-cmdline').fn
+#        imap('<Esc'..'>', fn.close)
+#        imap('<C-c>', fn.close)
+#        imap('jj', fn.close)
+#        imap('<C-p>', fn.up_history)
+#        imap('<C-n>', fn.down_history)
+#      end,
+#    },
+#  }
+#'''
+#hook_add = '''
+#  nnoremap <C-p> <Cmd>lua require('fine-cmdline').open()<CR>
+#'''
+
+[[plugins]]
+repo = 'yuki-yano/fuzzy-motion.vim'
+depends = 'denops.vim'
+on_cmd = 'FuzzyMotion'
+hook_add = '''
+  nnoremap F   <Cmd>FuzzyMotion<CR>
+'''
+
+[[plugins]]
+repo = 'MunifTanjim/nui.nvim'
+
+[[plugins]]
+repo = 'neovim/nvim-lspconfig'
+on_ft = ['c', 'cpp', 'cmake', 'dart', 'typescript', 'go', 'python']
+if = 'has("nvim")'
+depends = 'ddc.vim'
+lua_source = '''
+  local on_attach = function(client, bufnr)
+    local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+    --local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+    -- buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+    -- Mappings.
+    local opts = { noremap=true, silent=true }
+    buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+    buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+    buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+    buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+    buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+    buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+    buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+    buf_set_keymap('n', '[e', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+    buf_set_keymap('n', ']e', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+    -- Set some keybinds conditional on server capabilities
+    if client.resolved_capabilities.document_formatting then
+      buf_set_keymap("n", "==", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+    elseif client.resolved_capabilities.document_range_formatting then
+      buf_set_keymap("n", "==", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+    end
+  end
+
+  local lsp = require 'lspconfig'
+  lsp.denols.setup{ on_attach = on_attach }
+  lsp.gopls.setup{ on_attach = on_attach }
+  lsp.dartls.setup{ on_attach = on_attach }
+  lsp.pylsp.setup{ on_attach = on_attach }
+  lsp.cmake.setup{ on_attach = on_attach }
+
+  local clangd_cmd = {
+      "clangd", "--clang-tidy",
+      "--completion-style=detailed",
+      "--fallback-style=webkit"}
+  if vim.fn.has('mac') == 1 then
+    clangd_cmd[#clangd_cmd + 1] = "--compile-commands-dir=build"
+  end
+  lsp.clangd.setup {
+    cmd = clangd_cmd,
+    on_attach = function(client, bufnr)
+      local opts = { noremap=true, silent=true }
+      vim.api.nvim_buf_set_keymap(bufnr, 'n', '<F4>', '<cmd>ClangdSwitchSourceHeader<CR>', opts)
+      on_attach(client, bufnr)
+    end,
+  }
+  --vim.lsp.handlers["textDocument/publishDiagnostics"] = function() end
+  --require'lspconfig'.sumneko.setup{}
+'''
+
+[[plugins]]
+repo = 'folke/noice.nvim'
+depends = ['nui.nvim']
+#on_event = 'VimEnter'
+lua_source = '''
+  require'noice'.setup {
+    cmdline = {
+      enabled = true,
+      icons = {
+        ['/'] = { icon = '/', hl_group = 'DiagnosticWarn' },
+        ['?'] = { icon = '?', hl_group = 'DiagnosticWarn' },
+        [':'] = { icon = ':', hl_group = 'DiagnosticInfo', firstc = false },
+      },
+      view = "cmdline",
+    },
+    popupmenu = {
+      enabled = false,
+    },
+    messages = {
+      enabled = true,
+    },
+    routes = {
+      {
+        view = "mini",
+        filter = {
+          event = { "msg_show", "msg_showmode" },
+          ["not"] = {
+            kind = { "confirm", "confirm_sub" },
+          },
+        },
+      },
+      {
+        filter = {
+          event = "cmdline",
+          find = "^%s*[/?]",
+        },
+        view = "cmdline",
+      },
+    },
+  }
+'''
+
+[[plugins]]
+repo = 'rcarriga/nvim-notify'
+on_lua = 'notify'
+lua_source = '''
+  require('notify').setup({
+    render = "minimal",
+    stages = "static",
+    timeout = 1000,
+  })
+'''
+
+#[[plugins]]
+#repo = 'vigoux/notifier.nvim'
+#on_lua = 'notifier'
+#on_event = 'VimEnter'
+#lua_source = '''
+#  require'notifier'.setup {
+#    -- You configuration here
+#  }
+#'''
+
+[[plugins]]
+repo = 'Shougo/neosnippet-snippets'
+
+[[plugins]]
+repo = 'Shougo/neosnippet.vim'
+depends = ['neosnippet-snippets', 'context_filetype.vim']
+on_event = 'InsertEnter'
+on_source = 'ddc.vim'
+hook_source = '''
+imap <silent><C-k>     <Plug>(neosnippet_jump_or_expand)
+smap <silent><C-k>     <Plug>(neosnippet_jump_or_expand)
+xmap <silent><C-k>     <Plug>(neosnippet_expand_target)
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+let g:neosnippet#enable_completed_snippet = 0
+let g:neosnippet#enable_complete_done = 0
+let g:neosnippet#enable_snipmate_compatibility = 1
+let g:neosnippet#expand_word_boundary = 1
+"let g:neosnippet#snippets_directory = '~/.vim/snippets'
+'''
+
+[[plugins]]
+repo = 'mhinz/vim-sayonara'
+on_cmd = 'Sayonara'
+
+[[plugins]]
+repo = 'kana/vim-smartchr'
+on_event = 'InsertCharPre'
+on_ft = ['c', 'cpp']
+hook_source = '''
+" inoremap <expr> , smartchr#one_of(', ', ',')
+augroup MyAutoCmd
+" Substitute .. into -> .
+autocmd FileType c,cpp inoremap <buffer> <expr> .
+        \ smartchr#loop('.', '->', '...')
+augroup END
+'''
+
+[[plugins]]
+repo = 'Shougo/echodoc.vim'
+on_event = 'InsertEnter'
+hook_source = '''
+  call echodoc#enable()
+  let g:echodoc#type = 'virtual'
+  let g:echodoc#events = ['PumCompleteDone', 'TextChangedP', 'PumCompleteChanged']
+'''
+
+[[plugins]]
+repo = "skywind3000/vim-terminal-help"
+on_event = ["BufReadPre", "BufNewFile"]
+hook_source = '''
+let g:terminal_key='<C-t>'
+let g:terminal_cwd=2
+let g:terminal_height=15
+let g:terminal_shell='zsh'
+'''
+
+# gitsigns
+[[plugins]]
+repo = "lewis6991/gitsigns.nvim"
+on_event = ['BufReadPre', 'BufNewFile']
+lua_source = '''
+  require('gitsigns').setup {
+    current_line_blame = false,
+    signcolumn = true,  -- Toggle with `:Gitsigns toggle_signs`
+    numhl      = false, -- Toggle with `:Gitsigns toggle_numhl`
+    signs = {
+      add          = {hl = 'GitSignsAdd'   , text = '▋', numhl='GitSignsAddNr'   , linehl='GitSignsAddLn'},
+      change       = {hl = 'GitSignsChange', text = '▋', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
+      delete       = {hl = 'GitSignsDelete', text = '▋', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
+      topdelete    = {hl = 'GitSignsDelete', text = '▔', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
+      changedelete = {hl = 'GitSignsChange', text = '▎', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
+    },
+    on_attach = function(bufnr)
+      local gs = require "gitsigns"
+      local function map(mode, l, r, opts)
+        opts = opts or {}
+        opts.buffer = bufnr
+        vim.keymap.set(mode, l, r, opts)
+      end
+
+      -- Navigation
+      map('n', ']c', function()
+        if vim.wo.diff then return ']c' end
+        vim.schedule(function() gs.prev_hunk() end)
+        return '<Ignore>'
+      end, {expr=true})
+      map('n', '[c', function()
+        if vim.wo.diff then return '[c' end
+        vim.schedule(function() gs.next_hunk() end)
+        return '<Ignore>'
+      end, {expr=true})
+      -- Actions
+      map({'n', 'v'}, '<leader>hs', ':Gitsigns stage_hunk<CR>')
+      map({'n', 'v'}, '<leader>hr', ':Gitsigns reset_hunk<CR>')
+      map('n', '<leader>hS', gs.stage_buffer)
+      map('n', '<leader>hu', gs.undo_stage_hunk)
+      map('n', '<leader>hR', gs.reset_buffer)
+      map('n', '<leader>hp', gs.preview_hunk)
+      map('n', '<leader>hb', function() gs.blame_line{full=true} end)
+      map('n', '<leader>tb', gs.toggle_current_line_blame)
+      map('n', '<leader>hd', gs.diffthis)
+      map('n', '<leader>hD', function() gs.diffthis('~') end)
+      map('n', '<leader>td', gs.toggle_deleted)
+      -- Text object
+      map({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+    end,
+  }
+'''

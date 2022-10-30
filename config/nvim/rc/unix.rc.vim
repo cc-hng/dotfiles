@@ -8,7 +8,7 @@ set shell=sh
 " Set path.
 let $PATH = expand('~/bin').':/usr/local/bin/:'.$PATH
 
-if vimrc#is_gui_running()
+if has('gui_running')
   finish
 endif
 

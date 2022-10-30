@@ -8,20 +8,22 @@ nnoremap [Space]pc
 '''
 
 [[plugins]]
+repo = 'vim-jp/autofmt'
+
+[[plugins]]
 repo = 'kana/vim-operator-user'
+
+[[plugins]]
+repo = 'JesseKPhillips/d.vim'
+
+[[plugins]]
+repo = 'vim-jp/vimdoc-ja'
 
 [[plugins]]
 repo = 'Shirk/vim-gas'
 
-[[plugins]]
-repo = 'chrisbra/vim-zsh'
-
-[[plugins]]
-repo = 'roxma/vim-hug-neovim-rpc'
-on_if = '!has("nvim")'
-
-[[plugins]]
-repo = 'roxma/nvim-yarp'
+#[[plugins]]
+#repo = 'chrisbra/vim-zsh'
 
 [[plugins]]
 repo = 'vim-jp/syntax-vim-ex'
@@ -41,24 +43,8 @@ repo = 'rbtnn/vim-vimscript_indentexpr'
 [[plugins]]
 repo = 'mboughaba/i3config.vim'
 hook_add = '''
-autocmd MyAutoCmd BufNewFile,BufRead *i3/config set filetype=i3config
+  autocmd MyAutoCmd BufNewFile,BufRead *i3/config set filetype=i3config
 '''
-
-# [[plugins]]
-# repo = 'mhinz/vim-startify'
-
-# [[plugins]]
-# repo = 'rafi/awesome-vim-colorschemes'
-
-# [[plugins]]
-# repo = 'chriskempson/base16-vim'
-#
-# [[plugins]]
-# repo = 'RRethy/nvim-base16'
-#
-# [[plugins]]
-# repo = 'Mofiqul/vscode.nvim'
-#
 
 # colorschemes with treesitter support
 [[plugins]]
@@ -69,3 +55,6 @@ repo = 'RRethy/nvim-base16'
 
 [[plugins]]
 repo = 'lourenci/github-colors'
+hook_add = '''
+let g:nvcode_termcolors=256
+'''

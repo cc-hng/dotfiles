@@ -97,7 +97,7 @@ nnoremap <silent> <Tab>      <cmd>wincmd w<CR>
 nnoremap <silent><expr> q
       \ &l:filetype ==# 'qf' ? '<Cmd>cclose<CR>' :
       \ winnr('$') != 1 ? '<Cmd>close<CR>' :
-      \ len(getbufinfo({'buflisted':1})) != 1 ? '<Cmd>Sayonara<CR>' : ""
+      \ len(getbufinfo({'buflisted':1})) != 1 ? '<Cmd>Sayonara<CR>' : ''
 
 " Original search
 nnoremap s/    /
@@ -172,12 +172,12 @@ command! -range -nargs=1 AddNumbers
 nnoremap <silent> #    <C-^>
 
 if exists(':tnoremap')
-  " Note: Does not overwrite <ESC> behavior
+  " NOTE: Does not overwrite <ESC> behavior
   if has('nvim')
     tnoremap   jj         <C-\><C-n>
   else
-    tnoremap   <ESC><ESC>  <C-w>N
-    tnoremap   jj          <C-w>N
+    tnoremap   <ESC><ESC>  <C-l>N
+    tnoremap   jj          <C-l>N
   endif
   tnoremap   j<Space>   j
   tnoremap <expr> ;  vimrc#sticky_func()
@@ -203,7 +203,7 @@ command! -bang -bar -complete=file -nargs=? Utf16
 
 " Tried to make a file note version.
 command! WUtf8 setlocal fenc=utf-8
-command! WCp936 setlocal fenc=cp936
+command! WCp932 setlocal fenc=cp936
 
 " Appoint a line feed.
 command! -bang -complete=file -nargs=? WUnix
