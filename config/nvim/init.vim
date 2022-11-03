@@ -12,7 +12,8 @@ end
 
 vim.defer_fn(function()
   vim.cmd [[
-    color nvcode
+    " color nvcode
+    color base16-primer-dark
     " for drop command
     let $NVIM_LISTEN_ADDRESS=1
   ]]

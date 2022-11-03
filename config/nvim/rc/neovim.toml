@@ -90,9 +90,9 @@ lua_source = '''
     buf_set_keymap('n', '[e', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
     buf_set_keymap('n', ']e', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
     -- Set some keybinds conditional on server capabilities
-    if client.resolved_capabilities.document_formatting then
+    if client.server_capabilities.document_formatting then
       buf_set_keymap("n", "==", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
-    elseif client.resolved_capabilities.document_range_formatting then
+    elseif client.server_capabilities.document_range_formatting then
       buf_set_keymap("n", "==", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
     end
   end
@@ -121,6 +121,40 @@ lua_source = '''
   }
   --vim.lsp.handlers["textDocument/publishDiagnostics"] = function() end
   --require'lspconfig'.sumneko.setup{}
+'''
+
+[[plugins]]
+repo = 'lambdalisue/suda.vim'
+on_cmd = ['SudaRead', 'SudaWrite']
+hook_add = '''
+  let g:suda_smart_edit = v:true
+'''
+
+[[plugins]]
+repo = 'windwp/nvim-autopairs'
+lua_source = '''
+lua << EOF
+require('nvim-autopairs').setup{}
+-- If you want insert `(` after select function or method item
+-- local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+-- local cmp = require('cmp')
+-- cmp.event:on( 'confirm_done', cmp_autopairs.on_confirm_done({  map_char = { tex = '' } }))
+EOF
+'''
+
+[[plugins]]
+repo = 'mhinz/vim-sayonara'
+on_cmd = 'Sayonara'
+
+[[plugins]]
+repo = 'terrortylor/nvim-comment'
+on_lua = 'nvim_comment'
+hook_add = '''
+autocmd MyAutoCmd BufEnter *.cpp,*.h
+    \ :lua vim.api.nvim_buf_set_option(0, "commentstring", "// %s")
+autocmd MyAutoCmd BufFilePost *.cpp,*.h
+    \ :lua vim.api.nvim_buf_set_option(0, "commentstring", "// %s")
+lua require "nvim_comment".setup {}
 '''
 
 [[plugins]]
