@@ -98,6 +98,8 @@ hook_source = '''
       \     'filer': {
       \       'split': 'no',
       \       'toggle': v:true,
+      \       'sortTreesFirst': v:true,
+      \       'sort': 'filename',
       \     },
       \   },
       \   'kindOptions': {
