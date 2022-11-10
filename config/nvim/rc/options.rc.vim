@@ -345,5 +345,5 @@ set scrolloff=5
 
 set nu
 set rnu
-set cursorline
+set nocursorline
 set mouse=ni

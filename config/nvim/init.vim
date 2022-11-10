@@ -12,8 +12,6 @@ end
 
 vim.defer_fn(function()
   vim.cmd [[
-    " color nvcode
-    color base16-primer-dark
     " for drop command
     let $NVIM_LISTEN_ADDRESS=1
   ]]
@@ -22,4 +20,9 @@ vim.defer_fn(function()
     vim.cmd [[ set signcolumn=yes ]]
   end
 end, 0)
+
+-- cmdline show on startup
+vim.defer_fn(function()
+  vim.cmd [[ redraw! ]]
+end, 360)
 EOF
