@@ -312,7 +312,7 @@ alias vim="TERM=xterm-256color nvim --listen $HOME/.cache/nvim/server.pipe"
 if ! command -v fd > /dev/null; then
   alias fd=fdfind
 fi
-alias cmaked="cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -GNinja -DCMAKE_BUILD_TYPE=Debug -DUSE_CCACHE=ON -DUSE_SANITIZER='Address;Undefined' -DUSE_STATIC_ANALYZER='clang-tidy'"
+alias cmaked="cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -GNinja -DCMAKE_BUILD_TYPE=Debug -DUSE_CCACHE=ON -DUSE_SANITIZER='Address;Undefined'"
 
 #####################################################################
 # keybinds

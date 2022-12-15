@@ -17,23 +17,20 @@ let g:python3_host_prog = has('win32') ? 'python.exe' : 'python3'
 set inccommand=nosplit
 
 set pumblend=20
-
 set winblend=20
 
 " Use cursor shape feature
-set guicursor=n-v-c:block-Cursor/lCursor-blinkon0,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
-
-" Share the histories
-" autocmd MyAutoCmd FocusGained *
-"      \ if exists(':rshada') | rshada | wshada | endif
+set guicursor=n-v-c:block-Cursor/lCursor-blinkon0,
+      \i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
 
 " Modifiable terminal
 autocmd MyAutoCmd TermOpen * setlocal modifiable
 
 let g:terminal_scrollback_buffer_size = 3000
 
-autocmd MyAutoCmd TextYankPost * lua require'vim.highlight'.on_yank
-     \ {higroup='IncSearch', timeout=100}
+autocmd MyAutoCmd TextYankPost *
+      \ lua require'vim.highlight'.on_yank
+      \ { higroup='IncSearch', timeout=100 }
 
 " For neovide
 let g:neovide_no_idle = v:true

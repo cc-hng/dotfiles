@@ -277,7 +277,7 @@ endif
 " Don't complete from other buffer.
 set complete=.
 " Set popup menu max height.
-set pumheight=10
+set pumheight=8
 if exists('+pumwidth')
   " Set popup menu min width.
   set pumwidth=0

@@ -14,6 +14,11 @@ vim.defer_fn(function()
   vim.cmd [[
     " for drop command
     let $NVIM_LISTEN_ADDRESS=1
+    " color base16-ayu-dark
+    " color base16-solarized-dark
+    " color base16-material-palenight
+    color base16-tokyo-night-dark
+    " color base16-material-darker
   ]]
 
   if get_git_pwd() ~= nil then
