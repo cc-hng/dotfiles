@@ -17,8 +17,9 @@ vim.defer_fn(function()
     " color base16-ayu-dark
     " color base16-solarized-dark
     " color base16-material-palenight
-    color base16-tokyo-night-dark
+    "color base16-tokyo-night-dark
     " color base16-material-darker
+    color nvcode
   ]]
 
   if get_git_pwd() ~= nil then

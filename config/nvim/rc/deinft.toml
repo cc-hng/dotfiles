@@ -106,16 +106,6 @@ go = '''
   match goErr /\<err\>/
 '''
 
-cpp = '''
-setlocal shiftwidth=4 softtabstop=4
-let b:echodoc_enabled = v:true
-'''
-
-c = '''
-setlocal shiftwidth=4 softtabstop=4
-let b:echodoc_enabled = v:true
-'''
-
 vim = '''
   setlocal shiftwidth=2 softtabstop=2
   setlocal iskeyword+=:,#

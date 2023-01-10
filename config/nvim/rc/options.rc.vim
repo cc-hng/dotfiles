@@ -40,13 +40,11 @@ set smarttab
 " Exchange tab to spaces.
 set expandtab
 " Substitute <Tab> with blanks.
-" set tabstop=8
-" Spaces instead <Tab>.
-" set softtabstop=4
-" Autoindent width.
 set tabstop=4
-set softtabstop=2
-set shiftwidth=2
+" Spaces instead <Tab>.
+set softtabstop=4
+" Autoindent width.
+set shiftwidth=4
 " Round indent by shiftwidth.
 set shiftround
 
@@ -138,7 +136,7 @@ function! s:mkdir_as_necessary(dir, force) abort
 endfunction
 
 " Use autofmt.
-" set formatexpr=autofmt#japanese#formatexpr()
+set formatexpr=autofmt#japanese#formatexpr()
 
 " Use blowfish2
 " NOTE: It seems 15ms overhead.
@@ -175,40 +173,12 @@ else
    set listchars=tab:▸\ ,trail:-,precedes:«,nbsp:%
 endif
 
-" Always disable statusline.
-set laststatus=0
-
 " Disable statusline when command line
 "autocmd MyAutoCmd CmdlineEnter * set laststatus=0 | redrawstatus
 "autocmd MyAutoCmd CmdlineLeave * set laststatus=2
 
-" Height of the command line.
-try
-  set cmdheight=0
-
-  " For recording messages
-  autocmd MyAutoCmd RecordingEnter * set cmdheight=1
-  autocmd MyAutoCmd RecordingLeave * set cmdheight=0
-catch
-  set cmdheight=1
-endtry
-
-" Not show command on statusline.
-set noshowcmd
-" Disable ruler
-set noruler
 " Does not report lines
 set report=1000
-
-" Show title.
-set title
-" Title length.
-set titlelen=95
-" Title string.
-let &g:titlestring =
-      \ "%{expand('%:p:~:.')} %<\(%{fnamemodify(getcwd(), ':~')}\)%(%m%r%w%)"
-" Disable tabline.
-set showtabline=0
 
 " Set statusline.
 set statusline=%{repeat('─',winwidth('.'))}
@@ -222,10 +192,6 @@ set breakat=\ \	;:,!?
 " Wrap conditions.
 set whichwrap+=h,l,<,>,[,],b,s,~
 set breakindent
-
-" Short messages
-set shortmess=aTIcFoOsSW
-set noshowmode
 
 " Don't create backup.
 set nowritebackup
@@ -260,9 +226,9 @@ set wildignorecase
 " Increase history amount.
 set history=200
 if has('nvim')
-  set shada='100,<20,s10,h
+  set shada='100,<20,s10,h,r/tmp/,rterm:
 else
-  set viminfo='100,<20,s10,h
+  set viminfo='100,<20,s10,h,r/tmp/
 endif
 
 " Disable menu
@@ -334,23 +300,7 @@ set cedit=
 
 set redrawtime=0
 
-" Enable true color
-if exists('+termguicolors') && !has('gui_running')
-  set termguicolors
-endif
-
 " I use <C-w> in terminal mode
 if exists('+termwinkey')
   set termwinkey=<C-L>
 endif
-
-" Colorscheme
-colorscheme candy
-
-" set cursorline
-set scrolloff=5
-
-set nu
-set rnu
-set nocursorline
-set mouse=ni

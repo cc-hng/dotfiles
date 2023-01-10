@@ -5,14 +5,18 @@ on_source = 'denops.vim'
 hook_add = '''
   nnoremap s<Space> <Cmd>Ddu
   \ -name=files file
-  \ -source-option-path='`fnamemodify($MYVIMRC, ':h').'/rc'`'<CR>
-  nnoremap sp
-  \ <Cmd>Ddu -name=files file_point file_old
-  \ `finddir('.git', ';') != '' ? 'file_external' : 'file'`
-  \ -sync -ui-param-displaySourceName=short<CR>
+  \ -source-option-path='`fnamemodify(dein#util#_get_myvimrc(), ':p:h').'/rc'`'
+  \ <CR>
   nnoremap ss
   \ <Cmd>Ddu -name=files buffer
   \ -sync -ui-param-displaySourceName=short<CR>
+  nnoremap sp
+  \ <Cmd>Ddu -name=files file_point file_old
+  \ `finddir('.git', ';') != '' ? 'file_external' : 'file'`
+  \ file -source-param-new
+  \ -volatile -sync
+  \ -ui-param-displaySourceName=short
+  \ <CR>
   nnoremap / <Cmd>Ddu
   \ -name=search line -resume=v:false
   \ -ui-param-startFilter
@@ -25,7 +29,13 @@ hook_add = '''
   nnoremap ;g <Cmd>Ddu
   \ -name=search rg -resume=v:false
   \ -ui-param-ignoreEmpty
-  \ -source-param-input=`input('Pattern: ')`
+  \ -source-param-input=`input('Pattern: ', expand('<cword>'))`
+  \ <CR>
+  nnoremap ;f <Cmd>Ddu
+  \ -name=search rg -resume=v:false
+  \ -ui-param-ignoreEmpty
+  \ -source-param-input=`input('Pattern: ', expand('<cword>'))`
+  \ -source-param-path=`input('Directory: ', '', 'dir')`
   \ <CR>
   nnoremap n <Cmd>Ddu
   \ -name=search -resume
@@ -146,6 +156,9 @@ hook_source = '''
       \       filterSplitDirection: 'floating',
       \       previewFloating: v:true,
       \       floatingBorder: 'single',
+      \       highlights: #{
+      \         floating: 'Normal',
+      \       },
       \     },
       \     filer: #{
       \       split: 'no',
@@ -286,6 +299,11 @@ ddu-ff = '''
   \ <Cmd>call ddu#ui#ff#do_action('itemAction', #{ name: 'yank' })<CR>
   nnoremap <buffer> gr
   \ <Cmd>call ddu#ui#ff#do_action('itemAction', #{ name: 'grep' })<CR>
+
+  xnoremap <silent><buffer> <Space>
+  \ :call ddu#ui#ff#do_action('toggleSelectItem')<CR>
+
+  " Switch options
   nnoremap <buffer> u
   \ <Cmd>call ddu#ui#ff#do_action('updateOptions', #{
   \   sourceOptions: #{
@@ -294,14 +312,20 @@ ddu-ff = '''
   \     },
   \   },
   \ })<CR>
-  xnoremap <silent><buffer> <Space>
-  \ :call ddu#ui#ff#do_action('toggleSelectItem')<CR>
+
+  " Switch sources
+  nnoremap <buffer> ff
+  \ <Cmd>call ddu#ui#ff#do_action('updateOptions', #{
+  \   sources: [
+  \     #{ name: 'file' },
+  \   ],
+  \ })<CR>
 '''
 ddu-ff-filter = '''
-inoremap <buffer> <CR>
-\ <Esc><Cmd>call ddu#ui#ff#close()<CR>
-nnoremap <buffer> <CR>
-\ <Cmd>call ddu#ui#ff#close()<CR>
+  inoremap <buffer> <CR>
+  \ <Esc><Cmd>call ddu#ui#ff#close()<CR>
+  nnoremap <buffer> <CR>
+  \ <Esc><Cmd>call ddu#ui#ff#close()<CR>
 '''
 
 [[plugins]]
