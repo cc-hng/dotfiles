@@ -1,14 +1,23 @@
 [[plugins]]
 repo = 'vim-denops/denops.vim'
+rev = "v3.4.2"
 on_event = 'CursorHold'
 hook_source = '''
   " NOTE: for profile
   "let g:denops#server#deno_args = [
   "    \ '-q',
-  "    \ '--no-check',
-  "    \ '--unstable',
   "    \ '-A',
+  "    \ '--unstable',
+  "    \ '--no-lock',
   "    \ '--inspect',
+  "    \ ]
+
+  " NOTE: for test
+  "let g:denops#server#deno_args = [
+  "    \ '-q',
+  "    \ '-A',
+  "    \ '--unstable',
+  "    \ '--no-lock',
   "    \ ]
 
   " Use background server
@@ -47,6 +56,18 @@ repo = 'Shougo/ddx.vim'
 hook_add = '''
   nnoremap [Space]x <Cmd>Ddx -path=`expand('%')`<CR>
 '''
+hook_source = '''
+  call ddu#custom#patch_global(#{
+      \   ui: 'hex',
+      \ })
+'''
+[plugins.ftplugin]
+ddx-hex = '''
+  nnoremap <buffer> q
+  \ <Cmd>call ddx#ui#hex#do_action('quit')<CR>
+  nnoremap <buffer> r
+  \ <Cmd>call ddx#ui#hex#do_action('change')<CR>
+'''
 
 [[plugins]]
 repo = 'Shougo/ddx-commands.vim'
@@ -68,6 +89,10 @@ on_ft = ['qf']
 qf = '''
   nnoremap <buffer> r <Cmd>Qfreplace<CR>
 '''
+
+[[plugins]]
+repo = 'itchyny/vim-qfedit'
+on_ft = ['qf']
 
 [[plugins]]
 repo = 'tyru/open-browser.vim'
@@ -131,21 +156,6 @@ hook_source = '''
   let g:haskell_conceal = v:false
 '''
 
-[[plugins]]
-repo = 'hrsh7th/vim-eft'
-hook_source = '''
-  let g:eft_ignorecase = v:true
-'''
-hook_add = '''
-  nmap ;; <Plug>(eft-repeat)
-  xmap ;; <Plug>(eft-repeat)
-
-  nmap f <Plug>(eft-f)
-  xmap f <Plug>(eft-f)
-  omap f <Plug>(eft-f)
-'''
-on_map = {n = '<Plug>', x = '<Plug>', o = '<Plug>'}
-
 #[[plugins]]
 #repo = 'teal-language/vim-teal'
 #on_ft = 'teal'
@@ -173,14 +183,14 @@ repo = 'skanehira/denops-silicon.vim'
 hook_source = '''
   let g:silicon_options = {
       \  'font': 'Courier 10 Pitch',
-      \  'no_line_number': v:false,
+      \  'no_line_number': v:true,
       \  'no_round_corner': v:false,
       \  'no_window_controls': v:false,
       \  'background_color': '#ffffff',
       \  'line_offset': 1,
       \  'line_pad': 2,
-      \  'pad_horiz': 80,
-      \  'pad_vert': 100,
+      \  'pad_horiz': 10,
+      \  'pad_vert': 10,
       \  'shadow_blur_radius': 0,
       \  'shadow_color': '#555555',
       \  'shadow_offset_x': 0,

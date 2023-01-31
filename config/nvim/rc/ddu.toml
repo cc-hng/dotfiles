@@ -184,6 +184,11 @@ hook_source = '''
       \       defaultAction: 'open',
       \     },
       \   },
+      \   kindParams: #{
+      \     action: #{
+      \       quit: v:true,
+      \     },
+      \   },
       \   actionOptions: #{
       \     narrow: #{
       \       quit: v:false,
@@ -299,6 +304,8 @@ ddu-ff = '''
   \ <Cmd>call ddu#ui#ff#do_action('itemAction', #{ name: 'yank' })<CR>
   nnoremap <buffer> gr
   \ <Cmd>call ddu#ui#ff#do_action('itemAction', #{ name: 'grep' })<CR>
+  nnoremap <buffer> n
+  \ <Cmd>call ddu#ui#ff#do_action('itemAction', #{ name: 'narrow' })<CR>
 
   xnoremap <silent><buffer> <Space>
   \ :call ddu#ui#ff#do_action('toggleSelectItem')<CR>
