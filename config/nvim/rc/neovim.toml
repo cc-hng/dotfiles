@@ -298,8 +298,8 @@ on_event = ['BufReadPre', 'BufNewFile']
 lua_source = '''
   require('gitsigns').setup {
     current_line_blame = false,
-    signcolumn = true,  -- Toggle with `:Gitsigns toggle_signs`
-    numhl      = false, -- Toggle with `:Gitsigns toggle_numhl`
+    signcolumn = false,  -- Toggle with `:Gitsigns toggle_signs`
+    numhl      = true, -- Toggle with `:Gitsigns toggle_numhl`
     signs = {
       add          = {hl = 'GitSignsAdd'   , text = '▋', numhl='GitSignsAddNr'   , linehl='GitSignsAddLn'},
       change       = {hl = 'GitSignsChange', text = '▋', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},

@@ -10,6 +10,8 @@ if &compatible
   set nocompatible
 endif
 
+let $NVIM_LISTEN_ADDRESS=1
+
 " Set augroup.
 augroup MyAutoCmd
   autocmd!
@@ -59,7 +61,8 @@ if has('nvim')
 endif
 
 " NOTE: Colorscheme must be initialized in the first.
-colorscheme candy
+colorscheme desert
+hi LineNr ctermfg=226 guifg=#888888
 
 " Use English interface.
 language message C

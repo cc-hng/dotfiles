@@ -304,3 +304,6 @@ set redrawtime=0
 if exists('+termwinkey')
   set termwinkey=<C-L>
 endif
+
+set nu
+set rnu

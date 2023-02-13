@@ -363,10 +363,10 @@ hook_source = '''
           \ )
 '''
 
-[[plugins]]
-repo = 'matsui54/denops-popup-preview.vim'
-on_source = ['ddc.vim']
-hook_source = '''
-  autocmd MyAutoCmd User PumCompleteChanged ++once
-  \ call popup_preview#enable()
-'''
+# [[plugins]]
+# repo = 'matsui54/denops-popup-preview.vim'
+# on_source = ['ddc.vim']
+# hook_source = '''
+#   autocmd MyAutoCmd User PumCompleteChanged ++once
+#   \ call popup_preview#enable()
+# '''

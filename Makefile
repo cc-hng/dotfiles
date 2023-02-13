@@ -7,37 +7,28 @@ export STOW_DIR := $(DOTFILES_DIR)
 
 .PHONY: all
 
-
 all: $(OS)
 
-macos: core-macos packages-macos link
+macos: packages-macos link
 
 linux: packages-linux link
 
-core-macos: brew
-	brew install git git-extras
-	brew install ruby
-
-stow-macos: brew
-	is-executable stow || brew install stow
-
-stow-linux:
-	is-executable stow || exit 1
-
-packages-macos: brew
-	brew bundle --file=$(DOTFILES_DIR)/install/macos/Brewfile
-	brew bundle --file=$(DOTFILES_DIR)/install/macos/Caskfile || true
+packages-macos:
+	$(DOTFILES_DIR)/install/os/install_brew.sh
+	$(DOTFILES_DIR)/install/install_common.sh
 	$(DOTFILES_DIR)/install/install_zsh_plugin.sh
 	#npm install -g $(shell cat install/npmfile)
-	$(DOTFILES_DIR)/install/common.sh
 
 packages-linux:
-	$(DOTFILES_DIR)/install/linux/linux.sh
+	if is-executable apt; then $(DOTFILES_DIR)/install/os/install_apt.sh; fi
+	if is-executable paru; then $(DOTFILES_DIR)/install/os/install_paru.sh; fi
+	is-executable stow || exit 1
+	$(DOTFILES_DIR)/install/install_common.sh
 	$(DOTFILES_DIR)/install/install_zsh_plugin.sh
 	#sudo -E npm install -g $(shell cat install/npmfile)
-	$(DOTFILES_DIR)/install/common.sh
 
-link: stow-$(OS)
+link:
+	is-executable stow || exit 1
   # curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh | bash
   # curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | bash
 	for FILE in $$(\ls -A runcom); do if [ -f $(HOME)/$$FILE -a ! -h $(HOME)/$$FILE ]; then \
@@ -48,16 +39,14 @@ link: stow-$(OS)
 	stow -t $(HOME) runcom
 	stow -t $(XDG_CONFIG_HOME) config
 
-unlink: stow-$(OS)
+unlink:
+	is-executable stow || exit 1
 	stow --delete -t $(HOME) runcom
 	stow --delete -t $(XDG_CONFIG_HOME) config
 	for FILE in $$(\ls -A runcom); do if [ -f $(HOME)/$$FILE.bak ]; then \
 		mv -v $(HOME)/$$FILE.bak $(HOME)/$${FILE%%.bak}; fi; done
 	for FILE in $$(\ls -A config); do if [ -f $(XDG_CONFIG_HOME)/$$FILE.bak ]; then \
 		mv -v $(XDG_CONFIG_HOME)/$$FILE.bak $(XDG_CONFIG_HOME)/$${FILE%%.bak}; fi; done
-
-brew:
-	is-executable brew || curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh | bash
 
 bash: BASH=/usr/local/bin/bash
 bash: SHELLS=/private/etc/shells
