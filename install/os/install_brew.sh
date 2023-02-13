@@ -17,5 +17,5 @@ brew install ruby
 # stow
 is-executable stow || brew install stow
 
-brew bundle --file=$(DOTFILES_ROOT)/install/os/conf/macos/Brewfile
-brew bundle --file=$(DOTFILES_ROOT)/install/os/conf/macos/Caskfile || true
+brew bundle --file=${DOTFILES_ROOT}/install/os/conf/macos/Brewfile
+brew bundle --file=${DOTFILES_ROOT}/install/os/conf/macos/Caskfile || true
