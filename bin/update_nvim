@@ -1,5 +1,0 @@
-#/usr/bin/env bash
-
-cd ~/.config/nvim
-git pull --ff --ff-only
-

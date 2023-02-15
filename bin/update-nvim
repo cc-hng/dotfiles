@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -ex
+
+rm -f /tmp/nvim-linux64.deb
+wget -c https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.deb -O /tmp/nvim-linux64.deb
+sudo dpkg -i /tmp/nvim-linux64.deb
+
+nvim --headless -R +'call dein#update()' +quit +quit

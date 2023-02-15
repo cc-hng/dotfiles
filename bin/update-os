@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -e
+
+# debian
+if is-executable apt; then
+  sudo -E apt update && sudo -E apt upgrade
+  sudo -E apt clean
+fi
+
+if is-supported "systemctl -a" &&  is-executable snap; then sudo -E snap refresh; fi
+
+# archlinux
+if is-executable paru; then paru; fi
+
+# macos
+if is-executable brew; then brew update && brew upgrade; fi
+
+# python
+update-pip
