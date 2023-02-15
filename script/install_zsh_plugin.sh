@@ -1,9 +1,9 @@
 #!/bin/bash
 
 set -e
-cd "$(dirname "$0")/.."
-DOTFILES_ROOT=$(pwd -P)
-source "$DOTFILES_ROOT/install/log.sh"
+
+cd "$(dirname "$0")"
+source common.sh
 
 mkdir -p  ${HOME}/.zsh
 cd ${HOME}/.zsh

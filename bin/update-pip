@@ -1,7 +1,11 @@
 #!/bin/bash
 
-set -ex
-# pip install -U `pip list --outdated | awk 'NR>2 {print $1}'`
+cd "$(dirname "$0")/../script"
+source common.sh
 
-pip install -U pip
-pip install -U docker-compose cmake-language-server python-lsp-server cmake-format
+set -ex
+
+pip_exe=$(is-supported "pip" pip pip3)
+
+${pip_exe} install -U pip
+${pip_exe} install -U $(cat ${DF_CONF_PIPFILE})

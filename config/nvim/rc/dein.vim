@@ -28,7 +28,7 @@ let g:dein#enable_notification = v:true
 let g:dein#install_check_diff = v:true
 let g:dein#install_check_remote_threshold = 24 * 60 * 60
 let g:dein#install_copy_vim = has('nvim')
-let g:dein#install_progress_type = 'floating'
+let g:dein#install_progress_type = 'echo'
 let g:dein#lazy_rplugins = v:true
 let g:dein#types#git#enable_partial_clone = v:true
 
@@ -70,7 +70,7 @@ if dein#min#load_state(s:path)
   endif
   call dein#load_toml(s:dein_ft_toml)
 
-  let work_directory = expand('~/work')
+  let work_directory = expand('~/ws/vim')
   if isdirectory(work_directory)
     " Load develop version plugins.
     call dein#local(work_directory,

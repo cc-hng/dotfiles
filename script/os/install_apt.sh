@@ -1,12 +1,17 @@
 #!/bin/bash
 
-sudo apt install  -y \
+old_sys=$(is-supported "lsb_release -r | grep 18.04" true false)
+
+if ! ${old_sys}; then
+  sudo -E apt install fd-find ripgrep
+fi
+
+sudo -E apt install  -y \
   ccache                \
   cmake                 \
   gdb                   \
   git                   \
   gzip                  \
-  python3               \
   python3-pip           \
   stow                  \
   tree                  \
@@ -18,7 +23,12 @@ sudo apt install  -y \
   lolcat                \
   netcat                \
   tmux                  \
+  net-tools             \
   ninja-build           \
+  lsof                  \
+  gnupg                 \
+  lrzsz                 \
+  zsh                   \
   pkg-config libcurl4-openssl-dev libssl-dev \
   build-essential
 
