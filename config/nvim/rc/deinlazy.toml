@@ -1,6 +1,5 @@
 [[plugins]]
 repo = 'vim-denops/denops.vim'
-rev = "v3.4.2"
 on_event = 'CursorHold'
 hook_source = '''
   " NOTE: for profile
