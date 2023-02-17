@@ -47,5 +47,5 @@ unlink:
 		mv -v $(XDG_CONFIG_HOME)/$$FILE.bak $(XDG_CONFIG_HOME)/$${FILE%%.bak}; fi; done
 
 bash: BASH=/usr/local/bin/bash
-bash: SHELLS=/private/etc/shells
+bash: SHELLS=/etc/shells
 
