@@ -1,8 +1,11 @@
 #!/bin/bash
 
+cd "$(dirname "$0")/../script"
+source common.sh
+
 set -ex
 
-cmd=$(is-supported "pip" pip pip3)
+pip_exe=$(is-supported "pip" pip pip3)
 
-$cmd install -U pip
-$cmd install -U docker-compose cmake-language-server python-lsp-server cmake-format
+${pip_exe} install -U pip
+${pip_exe} install -U $(cat ${DF_CONF_PIPFILE})

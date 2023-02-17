@@ -14,18 +14,16 @@ macos: packages-macos link
 linux: packages-linux link
 
 packages-macos:
-	$(DOTFILES_DIR)/install/os/install_brew.sh
-	$(DOTFILES_DIR)/install/install_common.sh
-	$(DOTFILES_DIR)/install/install_zsh_plugin.sh
-	#npm install -g $(shell cat install/npmfile)
+	$(DOTFILES_DIR)/script/os/install_brew.sh
+	$(DOTFILES_DIR)/script/install_common.sh
+	$(DOTFILES_DIR)/script/install_zsh_plugin.sh
 
 packages-linux:
-	if is-executable apt; then $(DOTFILES_DIR)/install/os/install_apt.sh; fi
-	if is-executable paru; then $(DOTFILES_DIR)/install/os/install_paru.sh; fi
+	if is-executable apt; then $(DOTFILES_DIR)/script/os/install_apt.sh; fi
+	if is-executable paru; then $(DOTFILES_DIR)/script/os/install_paru.sh; fi
 	is-executable stow || exit 1
-	$(DOTFILES_DIR)/install/install_common.sh
-	$(DOTFILES_DIR)/install/install_zsh_plugin.sh
-	#sudo -E npm install -g $(shell cat install/npmfile)
+	$(DOTFILES_DIR)/script/install_common.sh
+	$(DOTFILES_DIR)/script/install_zsh_plugin.sh
 
 link:
 	is-executable stow || exit 1

@@ -286,7 +286,7 @@ set display+=uhex
 " For conceal.
 set conceallevel=2
 
-set colorcolumn=79
+"set colorcolumn=79
 
 if exists('+previewpopup')
   set previewpopup=height:10,width:60

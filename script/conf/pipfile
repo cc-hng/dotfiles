@@ -1,0 +1,4 @@
+docker-compose
+cmake-language-server
+python-lsp-server
+cmake-format

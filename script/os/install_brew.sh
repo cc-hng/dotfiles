@@ -1,9 +1,7 @@
 #!/bin/bash
 
-cd "$(dirname "$0")/../.."
-DOTFILES_ROOT=$(pwd -P)
-source "$DOTFILES_ROOT/install/log.sh"
-export PATH=${DOTFILES_ROOT}/bin:$PATH
+cd "$(dirname "$0")/.."
+source common.sh
 
 if ! is-macos; then echo "Expect macos, but ostype: $OSTYPE"; exit 1; fi
 
@@ -17,5 +15,5 @@ brew install ruby
 # stow
 is-executable stow || brew install stow
 
-brew bundle --file=${DOTFILES_ROOT}/install/os/conf/macos/Brewfile
-brew bundle --file=${DOTFILES_ROOT}/install/os/conf/macos/Caskfile || true
+brew bundle --file=${DF_CONF_BREWFILE}
+brew bundle --file=${DF_CONF_CASKFILE} || true
