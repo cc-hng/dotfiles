@@ -22,3 +22,6 @@ fi
 
 # python
 update-pip
+
+# deno
+if is-executable deno; then deno upgrade; fi

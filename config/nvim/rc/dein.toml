@@ -41,15 +41,30 @@ hook_add = '''
 '''
 
 # colorschemes with treesitter support
-[[plugins]]
-repo = 'ChristianChiarulli/nvcode-color-schemes.vim'
-hook_add = '''
-  let g:nvcode_termcolors=256
-'''
+# [[plugins]]
+# repo = 'ChristianChiarulli/nvcode-color-schemes.vim'
+# hook_add = '''
+#   let g:nvcode_termcolors=256
+# '''
+
+# [[plugins]]
+# repo = 'RRethy/nvim-base16'
+
+# [[plugins]]
+# repo = 'lourenci/github-colors'
 
 [[plugins]]
-repo = 'RRethy/nvim-base16'
+repo = 'folke/tokyonight.nvim'
 
 [[plugins]]
-repo = 'lourenci/github-colors'
+repo = 'mhartington/oceanic-next'
+
+[[plugins]]
+repo = 'Th3Whit3Wolf/one-nvim'
+
+[[plugins]]
+repo = 'yazeed1s/oh-lucy.nvim'
+
+[[plugins]]
+repo = 'phha/zenburn.nvim'
 

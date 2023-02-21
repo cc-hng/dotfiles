@@ -87,3 +87,16 @@ if !empty(argv())
 endif
 
 set secure
+
+
+" color base16-solarized-dark
+" color base16-gruvbox-dark-pale
+" color base16-grayscale-dark
+" color base16-tomorrow-night
+" color nvcode
+" color nord
+" color base16-ayu-dark
+" color base16-everforest
+" color base16-qualia
+
+color tokyonight-night

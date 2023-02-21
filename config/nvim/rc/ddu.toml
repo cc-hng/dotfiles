@@ -3,6 +3,7 @@ repo = 'Shougo/ddu.vim'
 depends = 'denops.vim'
 on_source = 'denops.vim'
 hook_add = '''
+  nnoremap cc <Cmd>call ddu#start({ 'sources': [{ 'name': 'colorscheme' }] })<CR>
   nnoremap s<Space> <Cmd>Ddu
   \ -name=files file
   \ -source-option-path='`fnamemodify(dein#util#_get_myvimrc(), ':p:h').'/rc'`'
@@ -183,6 +184,9 @@ hook_source = '''
       \     },
       \     readme_viewer: #{
       \       defaultAction: 'open',
+      \     },
+      \     colorscheme: #{
+      \       defaultAction: 'set',
       \     },
       \   },
       \   kindParams: #{
@@ -522,4 +526,8 @@ on_source = 'ddu.vim'
 
 [[plugins]]
 repo = 'Bakudankun/ddu-filter-matchfuzzy'
+on_source = 'ddu.vim'
+
+[[plugins]]
+repo = '4513ECHO/ddu-source-colorscheme'
 on_source = 'ddu.vim'
