@@ -330,3 +330,4 @@ endif
 
 set nu
 set rnu
+autocmd MyAutoCmd FileType * setl cursorline
