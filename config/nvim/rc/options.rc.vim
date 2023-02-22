@@ -180,27 +180,31 @@ endif
 " Does not report lines
 set report=1000
 
+function! ToggleStatusline(enabled) abort
+  if a:enabled ==# 1
+    let &g:statusline=""
+        \ . "%{winnr('$')>1?'['.winnr().'/'.winnr('$')"
+        \ . ".(winnr('#')==winnr()?'#':'').']':''}\ "
+        \ . "%{(&previewwindow?'[preview] ':'').expand('%:t')} %m"
+        \ . "%="
+        \ . "%S"
+        \ . "%="
+        \ . "%{(winnr('$')==1 || winnr('#')!=winnr()) ? '['.(&filetype!=''?&filetype.',':'')"
+        \ . ".(&fenc!=''?&fenc:&enc).','.&ff.']' : ''}"
+        \ . "%{printf('%'.(len(line('$'))+2).'d/%d ',line('.'),line('$'))}"
+  else
+    let &g:statusline="%=%{printf('%'.(len(line('$'))+2).'d/%d ',line('.'),line('$'))}"
+  endif
+endfunction
+
 " Set statusline.
 " set statusline=%{repeat('─',winwidth('.'))}
 if has("nvim-0.9.0")
   set showcmdloc=statusline
-  let &g:statusline="%{winnr('$')>1?'['.winnr().'/'.winnr('$')"
-      \ . ".(winnr('#')==winnr()?'#':'').']':''}\ "
-      \ . "%{(&previewwindow?'[preview] ':'').expand('%:t')} %m"
-      \ . "%= %S"
-      \ . "%=%{(winnr('$')==1 || winnr('#')!=winnr()) ?
-      \ '['.(&filetype!=''?&filetype.',':'')"
-      \ . ".(&fenc!=''?&fenc:&enc).','.&ff.']' : ''}"
-      \ . "%{printf('%'.(len(line('$'))+2).'d/%d ',line('.'),line('$'))}"
-else
-  let &g:statusline="%{winnr('$')>1?'['.winnr().'/'.winnr('$')"
-      \ . ".(winnr('#')==winnr()?'#':'').']':''}\ "
-      \ . "%{(&previewwindow?'[preview] ':'').expand('%:t')} %m"
-      \ . "%=%{(winnr('$')==1 || winnr('#')!=winnr()) ?
-      \ '['.(&filetype!=''?&filetype.',':'')"
-      \ . ".(&fenc!=''?&fenc:&enc).','.&ff.']' : ''}"
-      \ . "%{printf('%'.(len(line('$'))+2).'d/%d ',line('.'),line('$'))}"
 endif
+call ToggleStatusline(1)
+autocmd MyAutoCmd CmdlineEnter * call ToggleStatusline(0) | redrawstatus
+autocmd MyAutoCmd CmdlineLeave * call ToggleStatusline(1)
 
 " NOTE: wrap option is very slow!
 set nowrap
