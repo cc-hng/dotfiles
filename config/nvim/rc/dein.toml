@@ -62,9 +62,3 @@ repo = 'mhartington/oceanic-next'
 [[plugins]]
 repo = 'Th3Whit3Wolf/one-nvim'
 
-[[plugins]]
-repo = 'yazeed1s/oh-lucy.nvim'
-
-[[plugins]]
-repo = 'phha/zenburn.nvim'
-

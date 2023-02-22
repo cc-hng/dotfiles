@@ -174,14 +174,21 @@ else
 endif
 
 " Disable statusline when command line
-"autocmd MyAutoCmd CmdlineEnter * set laststatus=0 | redrawstatus
-"autocmd MyAutoCmd CmdlineLeave * set laststatus=2
+" autocmd MyAutoCmd CmdlineEnter * set laststatus=0 | redrawstatus
+" autocmd MyAutoCmd CmdlineLeave * set laststatus=2
 
 " Does not report lines
 set report=1000
 
 " Set statusline.
-set statusline=%{repeat('─',winwidth('.'))}
+" set statusline=%{repeat('─',winwidth('.'))}
+let &g:statusline="%{winnr('$')>1?'['.winnr().'/'.winnr('$')"
+      \ . ".(winnr('#')==winnr()?'#':'').']':''}\ "
+      \ . "%{(&previewwindow?'[preview] ':'').expand('%:t')}"
+      \ . "\ %=%{(winnr('$')==1 || winnr('#')!=winnr()) ?
+      \ '['.(&filetype!=''?&filetype.',':'')"
+      \ . ".(&fenc!=''?&fenc:&enc).','.&ff.']' : ''}"
+      \ . "%m%{printf('%'.(len(line('$'))+2).'d/%d',line('.'),line('$'))}"
 
 " NOTE: wrap option is very slow!
 set nowrap
