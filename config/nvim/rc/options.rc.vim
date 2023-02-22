@@ -184,11 +184,11 @@ set report=1000
 " set statusline=%{repeat('─',winwidth('.'))}
 let &g:statusline="%{winnr('$')>1?'['.winnr().'/'.winnr('$')"
       \ . ".(winnr('#')==winnr()?'#':'').']':''}\ "
-      \ . "%{(&previewwindow?'[preview] ':'').expand('%:t')}"
+      \ . "%{(&previewwindow?'[preview] ':'').expand('%:t')}%m"
       \ . "\ %=%{(winnr('$')==1 || winnr('#')!=winnr()) ?
       \ '['.(&filetype!=''?&filetype.',':'')"
       \ . ".(&fenc!=''?&fenc:&enc).','.&ff.']' : ''}"
-      \ . "%m%{printf('%'.(len(line('$'))+2).'d/%d',line('.'),line('$'))}"
+      \ . "%{printf('%'.(len(line('$'))+2).'d/%d',line('.'),line('$'))}"
 
 " NOTE: wrap option is very slow!
 set nowrap

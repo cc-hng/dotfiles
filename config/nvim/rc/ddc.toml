@@ -119,7 +119,8 @@ hook_source = '''
 
   if has('nvim')
     call ddc#custom#patch_filetype(
-            \ ['typescript', 'go', 'python', 'dart', 'c', 'cpp', 'cmake'], 'sources',
+            \ ['typescript', 'javascript', 'go', 'python',
+            \   'dart', 'c', 'cpp', 'cmake'], 'sources',
             \ ['nvim-lsp', 'around', 'neosnippet']
             \ )
     call ddc#custom#patch_filetype(
