@@ -94,7 +94,7 @@ autocmd MyAutoCmd CmdlineLeave *
       \ let &l:iskeyword = s:save_iskeyword
 
 " Keymapping timeout.
-set timeout timeoutlen=500 ttimeoutlen=100
+set timeout timeoutlen=1000 ttimeoutlen=200
 
 " CursorHold time.
 set updatetime=500
@@ -182,13 +182,25 @@ set report=1000
 
 " Set statusline.
 " set statusline=%{repeat('─',winwidth('.'))}
-let &g:statusline="%{winnr('$')>1?'['.winnr().'/'.winnr('$')"
+if has("nvim-0.9.0")
+  set showcmdloc=statusline
+  let &g:statusline="%{winnr('$')>1?'['.winnr().'/'.winnr('$')"
       \ . ".(winnr('#')==winnr()?'#':'').']':''}\ "
-      \ . "%{(&previewwindow?'[preview] ':'').expand('%:t')}%m"
-      \ . "\ %=%{(winnr('$')==1 || winnr('#')!=winnr()) ?
+      \ . "%{(&previewwindow?'[preview] ':'').expand('%:t')} %m"
+      \ . "%= %S"
+      \ . "%=%{(winnr('$')==1 || winnr('#')!=winnr()) ?
       \ '['.(&filetype!=''?&filetype.',':'')"
       \ . ".(&fenc!=''?&fenc:&enc).','.&ff.']' : ''}"
-      \ . "%{printf('%'.(len(line('$'))+2).'d/%d',line('.'),line('$'))}"
+      \ . "%{printf('%'.(len(line('$'))+2).'d/%d ',line('.'),line('$'))}"
+else
+  let &g:statusline="%{winnr('$')>1?'['.winnr().'/'.winnr('$')"
+      \ . ".(winnr('#')==winnr()?'#':'').']':''}\ "
+      \ . "%{(&previewwindow?'[preview] ':'').expand('%:t')} %m"
+      \ . "%=%{(winnr('$')==1 || winnr('#')!=winnr()) ?
+      \ '['.(&filetype!=''?&filetype.',':'')"
+      \ . ".(&fenc!=''?&fenc:&enc).','.&ff.']' : ''}"
+      \ . "%{printf('%'.(len(line('$'))+2).'d/%d ',line('.'),line('$'))}"
+endif
 
 " NOTE: wrap option is very slow!
 set nowrap
