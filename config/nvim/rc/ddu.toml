@@ -159,6 +159,7 @@ hook_source = '''
       \       filterSplitDirection: 'floating',
       \       previewFloating: v:true,
       \       previewVertical: v:true,
+      \       winRow: 2,
       \       floatingBorder: 'single',
       \       highlights: #{
       \         floating: 'Normal',

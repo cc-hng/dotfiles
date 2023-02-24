@@ -85,7 +85,7 @@ setup_vcpkg
 #setup_lua_lsp
 
 info 'python package installing'
-cat ${DF_CONF_PIPFILE} | xargs -I {} ${pip_exe} install {} >/dev/null 2>&1
+${pip_exe} install -r ${DF_CONF_PIPFILE} >/dev/null 2>&1
 
 if ! is-executable deno; then
   info 'deno installing'
