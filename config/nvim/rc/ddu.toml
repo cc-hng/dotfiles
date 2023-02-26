@@ -158,7 +158,7 @@ hook_source = '''
       \     ff: #{
       \       filterSplitDirection: 'floating',
       \       previewFloating: v:true,
-      \       previewVertical: v:true,
+      \       previewSplit: 'no',
       \       winRow: 2,
       \       floatingBorder: 'single',
       \       highlights: #{
@@ -397,6 +397,8 @@ ddu-filer = '''
   nnoremap <buffer> p
   \ <Cmd>call ddu#ui#filer#do_action('itemAction',
   \ #{ name: 'paste' })<CR>
+  nnoremap <buffer> P
+  \ <Cmd>call ddu#ui#filer#do_action('preview')<CR>
   nnoremap <buffer> K
   \ <Cmd>call ddu#ui#filer#do_action('itemAction',
   \ #{ name: 'newDirectory' })<CR>

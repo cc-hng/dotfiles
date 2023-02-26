@@ -129,7 +129,7 @@ autocmd MyAutoCmd BufWritePre *
       \ call s:mkdir_as_necessary(expand('<afile>:p:h'), v:cmdbang)
 function! s:mkdir_as_necessary(dir, force) abort
   if !isdirectory(a:dir) && &l:buftype ==# '' &&
-        \ (a:force || input(printf('"%s" does not exist. Create? [y/N]',
+        \ (a:force || input(printf('"%s" does not exist. Create? [y/N] ',
         \              a:dir)) =~? '^y\%[es]$')
     call mkdir(iconv(a:dir, &encoding, &termencoding), 'p')
   endif
@@ -137,13 +137,6 @@ endfunction
 
 " Use autofmt.
 set formatexpr=autofmt#japanese#formatexpr()
-
-" Use blowfish2
-" NOTE: It seems 15ms overhead.
-" https://dgl.cx/2014/10/vim-blowfish
-" if has('cryptv')
-  "  set cryptmethod=blowfish2
-" endif
 
 " If true Vim master, use English help file.
 set helplang& helplang=en,ja

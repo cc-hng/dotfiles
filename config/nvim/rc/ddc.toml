@@ -258,7 +258,7 @@ hook_source = '''
     " \   horizontal_menu: v:true,
   call pum#set_option(#{
     \   max_width: 80,
-    \   use_complete: v:true,
+    \   use_setline: v:true,
     \ })
 '''
 
