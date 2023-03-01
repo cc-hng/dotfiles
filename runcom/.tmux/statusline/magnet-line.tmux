@@ -2,15 +2,16 @@ OneDark='#282a36'
 NightOwl='#0F1D2A'
 Material='#263238'
 
-BACKGROUND_COLOR=$NightOwl
+BACKGROUND_COLOR=$OneDark
 INACTIVE_FG_COLOR='#5c6370'
 ACTIVE_FG_COLOR='#fac863'
 
-set-option -g status-style "bg=$BACKGROUND_COLOR"
+# set-option -g status-style "bg=$BACKGROUND_COLOR"
 
 # Status setup
-set -g status-position bottom
+set -g status-position top
 set-option -g status on
+set-option -g status-style default
 set-option -g status-fg default
 set -g status-justify left
 set -g status-interval 5
@@ -38,8 +39,8 @@ status_items="#{?window_bell_flag,#[fg=red] ,}$search_icon $pane_count"
 # when use mbp use #{battery_icon}
 battery="🔋 Batt: #{battery_color_fg}🔌 #{battery_remain}#[default]"
 
-cpu="#[fg=#b8cc1d,bold]CPU: #[default]#{cpu_fg_color}#{cpu_icon} #{cpu_percentage}#[default]"
-ram="#[fg=#884ad4,bold] RAM: #{ram_fg_color}#{ram_icon}#[default]"
+cpu="#[fg=#b8cc1d,bold]CPU: #[default]#{cpu_fg_color}#{cpu_percentage}#[default]"
+ram="#[fg=#884ad4,bold] RAM: #{ram_fg_color}#{ram_percentage}#[default]"
 time="#[fg=#12b6db]%H:%M "
 
 # prefix

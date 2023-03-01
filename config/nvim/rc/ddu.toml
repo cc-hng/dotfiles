@@ -3,6 +3,7 @@ repo = 'Shougo/ddu.vim'
 depends = 'denops.vim'
 on_source = 'denops.vim'
 hook_add = '''
+
   nnoremap cc <Cmd>call ddu#start({ 'sources': [{ 'name': 'colorscheme' }] })<CR>
   nnoremap s<Space> <Cmd>Ddu
   \ -name=files file
@@ -159,7 +160,7 @@ hook_source = '''
       \       filterSplitDirection: 'floating',
       \       previewFloating: v:true,
       \       previewSplit: 'no',
-      \       winRow: 2,
+      \       winRow: &lines/2-13>2?&lines/2-13:2,
       \       floatingBorder: 'single',
       \       highlights: #{
       \         floating: 'Normal',

@@ -12,6 +12,8 @@ sudo -E apt install  -y \
   gdb                   \
   git                   \
   gzip                  \
+  gettext               \
+  htop                  \
   python3-pip           \
   stow                  \
   tree                  \
