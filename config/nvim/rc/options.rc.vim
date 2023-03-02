@@ -186,7 +186,10 @@ function! ToggleStatusline(enabled) abort
         \ . ".(&fenc!=''?&fenc:&enc).','.&ff.']' : ''}"
         \ . "%{printf('%'.(len(line('$'))+2).'d/%d ',line('.'),line('$'))}"
   else
-    let &g:statusline="%=%{printf('%'.(len(line('$'))+2).'d/%d ',line('.'),line('$'))}"
+    let &g:statusline="%="
+          \ . "%{expand('%:t')} "
+          \ . "%{(winnr('$')==1 || winnr('#')!=winnr()) ? '['.(&filetype!=''?&filetype.',':'')"
+          \ . ".(&fenc!=''?&fenc:&enc).','.&ff.']' : ''} "
   endif
 endfunction
 
