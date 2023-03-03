@@ -3,7 +3,6 @@ repo = 'Shougo/ddu.vim'
 depends = 'denops.vim'
 on_source = 'denops.vim'
 hook_add = '''
-
   nnoremap cc <Cmd>call ddu#start({ 'sources': [{ 'name': 'colorscheme' }] })<CR>
   nnoremap s<Space> <Cmd>Ddu
   \ -name=files file
@@ -106,6 +105,8 @@ hook_add = '''
   \ })<CR><Cmd>call setcmdline('')<CR><CR>
 
   autocmd MyAutoCmd FileType ddu-ff-filter setl nocursorline
+  autocmd MyAutoCmd FileType ddu-ff setl cursorline
+  autocmd MyAutoCmd FileType ddu-filer setl cursorline
 '''
 hook_source = '''
   call ddu#custom#alias('source', 'file_rg', 'file_external')
@@ -171,6 +172,7 @@ hook_source = '''
       \       sort: 'filename',
       \       sortTreesFirst: v:true,
       \       toggle: v:true,
+      \       statusline: v:false,
       \     },
       \   },
       \   kindOptions: #{
