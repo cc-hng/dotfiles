@@ -17,8 +17,7 @@ check_exe() {
 
 check_required() {
   info "mkdir -p ${DF_LOCAL_BIN}"
-  mkdir -p ${DF_LOCAL_BIN}
-  mkdir -p ${DF_LOCAL_DATA}
+  mkdir -p ${DF_LOCAL_BIN} ${DF_LOCAL_DATA}
 
   check_exe git
   check_exe wget
@@ -79,6 +78,7 @@ setup_nextword() {
   rm -rf ${temp_dir}
 }
 
+
 check_required
 setup_nextword
 setup_vcpkg
@@ -96,4 +96,15 @@ if ! is-executable lazydocker; then
   info 'lazydocker installing'
   curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
 fi
+
+if [[ ! -d ${DF_LOCAL_SECRET} ]]
+  info 'secret cloning'
+  git clone git@git.l2x.top:cc/secret.git ${DF_LOCAL_SECRET}
+fi
+
+if [[ ! -d /opt/cmake ]]
+  info 'cmake-scripts cloning'
+  git clone git@git.l2x.top:cc/cmake-scripts.git /opt/cmake
+fi
+
 success 'all done'

@@ -15,6 +15,7 @@ export DF_ROOT=$(pwd -P)
 # 本地安装目录
 export DF_LOCAL_BIN=${HOME}/.local/bin
 export DF_LOCAL_DATA=${HOME}/.local/share
+export DF_LOCAL_SECRET=${HOME}/.local/secret
 
 # 脚本配置文件
 export DF_CONF_BREWFILE=${DF_ROOT}/script/conf/macos/Brewfile

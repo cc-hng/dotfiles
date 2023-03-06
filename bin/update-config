@@ -1,0 +1,12 @@
+#!/bin/bash
+
+cd "$(dirname "$0")/../script"
+source common.sh
+
+set -ex
+
+cd ${DF_LOCAL_SECRET}
+git pull --ff --no-edit
+
+cd /opt/cmake
+git pull --ff --no-edit
