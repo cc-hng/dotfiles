@@ -16,8 +16,8 @@ let g:python3_host_prog = has('win32') ? 'python.exe' : 'python3'
 
 set inccommand=nosplit
 
-set pumblend=20
-set winblend=20
+set pumblend=30
+set winblend=30
 
 " Modifiable terminal
 autocmd MyAutoCmd TermOpen * setlocal modifiable

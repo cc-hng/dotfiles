@@ -119,9 +119,9 @@ lua_source = '''
 repo = 'terrortylor/nvim-comment'
 on_lua = 'nvim_comment'
 hook_add = '''
-autocmd MyAutoCmd BufEnter *.cpp,*.h
+autocmd MyAutoCmd BufEnter *.c,*.cpp,*.h
     \ :lua vim.api.nvim_buf_set_option(0, "commentstring", "// %s")
-autocmd MyAutoCmd BufFilePost *.cpp,*.h
+autocmd MyAutoCmd BufFilePost *.c,*.cpp,*.h
     \ :lua vim.api.nvim_buf_set_option(0, "commentstring", "// %s")
 lua require "nvim_comment".setup {}
 '''

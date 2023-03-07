@@ -97,11 +97,6 @@ if ! is-executable lazydocker; then
   curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
 fi
 
-if [[ ! -d ${DF_LOCAL_SECRET} ]]
-  info 'secret cloning'
-  git clone git@git.l2x.top:cc/secret.git ${DF_LOCAL_SECRET}
-fi
-
 if [[ ! -d /opt/cmake ]]
   info 'cmake-scripts cloning'
   git clone git@git.l2x.top:cc/cmake-scripts.git /opt/cmake

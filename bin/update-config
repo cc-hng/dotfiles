@@ -1,12 +1,28 @@
 #!/bin/bash
 
-cd "$(dirname "$0")/../script"
+cd "$(dirname "$0")/.."
+DOTS_HOME=$(pwd)
+
+pushd ${DOTS_HOME}/script  >/dev/null 2>&1
 source common.sh
+popd  >/dev/null 2>&1
 
-set -ex
+set -e
 
-cd ${DF_LOCAL_SECRET}
-git pull --ff --no-edit
+update_git_repo() {
+  if [ $# -ne 1 ]; then
+    fail "error parameter"
+  elif [ ! -d $1/.git ]; then
+    fail "$1 is a fatal git repo"
+  fi
 
-cd /opt/cmake
-git pull --ff --no-edit
+
+  info "Updating repo in >> $1 <<"
+  pushd $1  >/dev/null 2>&1
+  git pull --ff --no-edit  >/dev/null 2>&1
+  popd  >/dev/null 2>&1
+}
+
+update_git_repo ${DOTS_HOME}
+update_git_repo /opt/cmake
+update_git_repo ${DF_LOCAL_SECRET}
