@@ -426,19 +426,41 @@ to() {
   fi
 }
 
+_proxyon() {
+  if [ $# -ne 2 ]; then
+    echo "Usage: _proxyon <ip> <port>"
+    return 1
+  fi
+
+  ip=$1
+  port=$2
+
+  if nc -z $ip $port; then
+    export http_proxy=http://$ip:$port
+    export https_proxy=http://$ip:$port
+    export no_proxy=kubernetes.docker.internal,localhost,127.0.0.1,0.0.0.0,mirrors.ustc.edu.cn,mirrors.tencentyun.com
+  else
+    echo "Connected to $ip:$port failed"
+    return 1
+  fi
+}
+
 proxyon() {
-  export http_proxy=http://127.0.0.1:1081
-  export https_proxy=http://127.0.0.1:1081
-  export no_proxy=kubernetes.docker.internal,localhost,127.0.0.1,0.0.0.0,mirrors.ustc.edu.cn,mirrors.tencentyun.com
+  if [ $# -eq 1 ]; then
+    endpoint="$1"
+  else
+    endpoint="127.0.0.1:1081"
+  fi
+
+  ip=$(echo $endpoint | awk -F: '{print $1}')
+  port=$(echo $endpoint | awk -F: '{print $2}')
+  _proxyon $ip $port
+  # echo $endpoint | awk -F: '{print $1" "$2}' | xargs _proxyon
 }
 
 proxyoff() {
-  export http_proxy=
-  export https_proxy=
-  export no_proxy=
+  unset http_proxy https_proxy no_proxy
 }
-
-proxyon
 
 # set vcpkg complete
 autoload bashcompinit

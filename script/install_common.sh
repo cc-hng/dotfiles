@@ -17,7 +17,7 @@ check_exe() {
 
 check_required() {
   info "mkdir -p ${DF_LOCAL_BIN}"
-  mkdir -p ${DF_LOCAL_BIN} ${DF_LOCAL_DATA}
+  mkdir -p ${DF_LOCAL_BIN} ${DF_LOCAL_DATA} ${DF_LOCAL_ENV}
 
   check_exe git
   check_exe wget
