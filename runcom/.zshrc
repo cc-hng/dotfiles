@@ -21,6 +21,7 @@ fi
 #####################################################################
 # environment
 #####################################################################
+MY_ENV_HOME="$HOME/.config/env"
 
 export EDITOR=nvim
 export FCEDIT=nvim
@@ -405,6 +406,34 @@ stop() {
   ps -ef | rg $1 | rg -v rg | awk '{print $2}' | xargs -t -I {} kill -9 {}
 }
 
+setenv() {
+  if [ $# -ne 1 ] && [ $# -ne 2 ]; then
+    echo "Usage: setenv <key> <value>"; return 1;
+  fi
+
+  mkdir -p $MY_ENV_HOME
+  key=$1
+  value=$2
+  if [ "x$value" = "x" ]; then
+    rm -f $MY_ENV_HOME/$key
+  else
+    echo $value > $MY_ENV_HOME/$key
+  fi
+}
+
+getenv() {
+  if [ $# -gt 1 ]; then echo "Usage: getenv [key]"; return 1; fi
+
+  if [ $# -eq 1 ]; then
+    if [ ! -f "$MY_ENV_HOME/$1" ]; then echo "Error: $1 not found"; return 1; fi
+    cat "$MY_ENV_HOME/$1"
+  else
+    fn=$(functions getenv)
+    ls $MY_ENV_HOME | xargs -I {} zsh -c \
+        "export MY_ENV_HOME=$MY_ENV_HOME; eval $fn; printf "{}="; getenv {}"
+  fi
+}
+
 # refer: https://bash.cyberciti.biz/guide/Pass_arguments_into_a_function
 to() {
   if [ $# -ne 1 ]; then
@@ -434,6 +463,7 @@ _proxyon() {
 
   ip=$1
   port=$2
+  echo "proxyon: $ip:$port"
 
   if nc -z $ip $port; then
     export http_proxy=http://$ip:$port
@@ -446,16 +476,14 @@ _proxyon() {
 }
 
 proxyon() {
-  if [ $# -eq 1 ]; then
-    endpoint="$1"
-  else
+  endpoint=$(getenv proxy)
+  if [ $? -ne 0 ]; then
     endpoint="127.0.0.1:1081"
   fi
 
   ip=$(echo $endpoint | awk -F: '{print $1}')
   port=$(echo $endpoint | awk -F: '{print $2}')
   _proxyon $ip $port
-  # echo $endpoint | awk -F: '{print $1" "$2}' | xargs _proxyon
 }
 
 proxyoff() {
