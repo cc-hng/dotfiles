@@ -428,9 +428,12 @@ getenv() {
     if [ ! -f "$MY_ENV_HOME/$1" ]; then echo "Error: $1 not found"; return 1; fi
     cat "$MY_ENV_HOME/$1"
   else
-    fn=$(functions getenv)
-    ls $MY_ENV_HOME | xargs -I {} zsh -c \
-        "export MY_ENV_HOME=$MY_ENV_HOME; eval $fn; printf "{}="; getenv {}"
+    pushd $MY_ENV_HOME
+    for file in *; do 
+      content=$(cat $file)
+      echo "$file=$content"
+    done
+    popd
   fi
 }
 
