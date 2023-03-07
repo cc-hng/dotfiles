@@ -80,26 +80,21 @@ setup_nextword() {
 
 
 check_required
-setup_nextword
+#setup_nextword
 setup_vcpkg
 #setup_lua_lsp
 
 info 'python package installing'
 ${pip_exe} install -r ${DF_CONF_PIPFILE} >/dev/null 2>&1
 
-if ! is-executable deno; then
-  info 'deno installing'
-  curl -fsSL https://deno.land/install.sh | sh
-fi
-
 if ! is-executable lazydocker; then
   info 'lazydocker installing'
   curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
 fi
 
-if [[ ! -d /opt/cmake ]]
+if [[ ! -d /opt/cmake ]]; then
   info 'cmake-scripts cloning'
-  git clone git@git.l2x.top:cc/cmake-scripts.git /opt/cmake
+  git clone https://git.l2x.top/cc/cmake-scripts.git /opt/cmake
 fi
 
 success 'all done'

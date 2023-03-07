@@ -24,4 +24,4 @@ fi
 update-pip
 
 # deno
-if is-executable deno; then deno upgrade; fi
+if is-executable deno && !is-macos; then deno upgrade; fi

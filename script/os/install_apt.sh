@@ -65,3 +65,7 @@ if ! command -v lazygit > /dev/null; then
   wget -qO- https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz | sudo -E tar -xvz -C /usr/local/bin/
 fi
 
+if ! is-executable deno; then
+  info 'deno installing'
+  curl -fsSL https://deno.land/install.sh | sh
+fi

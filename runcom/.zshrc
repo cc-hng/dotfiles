@@ -164,6 +164,8 @@ ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg_bold[green]%}✔"
 if [ $UID = "0" ]; then
   PROMPT="%B%{[31m%}%/#%{^[[m%}%b "
   PROMPT2="%B%{[31m%}%_#%{^[[m%}%b "
+elif [ -f /.dockerenv ]; then
+  PROMPT="%B%{[31m%}%/ $%b "
 elif [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] ; then
   PROMPT="%{$fg[white]%}[${HOST%%.*} "
   PROMPT+='%{$fg[green]%}%1d%{$fg[white]%}] '

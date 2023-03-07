@@ -9,17 +9,21 @@ yes | paru -S bat       \
     ninja               \
     cmake               \
     gdb                 \
+    zip                 \
+    unzip               \
     gzip                \
     git                 \
     npm                 \
     lsd                 \
     ripgrep             \
     python              \
+    python-pip          \
     stow                \
     tree                \
     thefuck             \
     tree                \
     wget                \
+    curl                \
     lazygit             \
     docker              \
     docker-compose      \
@@ -28,8 +32,9 @@ yes | paru -S bat       \
     deno                \
     go                  \
     fd                  \
-    autojump            \
+    deno                \
     lolcat
 
 
 # from aur
+paru -S autojump
