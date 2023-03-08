@@ -90,11 +90,12 @@ setup_gcm() {
     popd
   fi
 
-  if git config --global --get credential.helper | rg -w "git-credential-manager" > /dev/null 2>&1; then
+  gcm_exe=git-credential-manager
+  if git config --global --get credential.helper | rg -w "${gcm_exe}" > /dev/null 2>&1; then
     user "gcm already configured"
   else
     info "gcm configuring"
-    git-credential-manager configure
+    ${gcm_exe} configure
   fi
 
   # refer:

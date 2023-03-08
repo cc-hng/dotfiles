@@ -1,6 +1,6 @@
 .DS_Store
 runcom/.tmux/plugins
 runcom/.tmux/resurrect
-install/os/conf/macos/Brewfile.lock.json
-install/os/conf/macos/Caskfile.lock.json
+script/conf/macos/Brewfile.lock.json
+script/conf/macos/Caskfile.lock.json
 config/fish/fish_variables
