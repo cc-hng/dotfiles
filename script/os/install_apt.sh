@@ -31,6 +31,7 @@ sudo -E apt install  -y \
   gnupg                 \
   lrzsz                 \
   zsh                   \
+  pass                  \
   pkg-config libcurl4-openssl-dev libssl-dev \
   build-essential
 

@@ -34,6 +34,7 @@ yes | paru -S bat       \
     fd                  \
     deno                \
     gnu-netcat          \
+    pass                \
     lolcat
 
 
