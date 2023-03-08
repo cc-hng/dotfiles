@@ -100,6 +100,7 @@ setup_gcm() {
   # refer:
   # 1. https://github.com/git-ecosystem/git-credential-manager/blob/main/docs/credstores.md#gpgpass-compatible-files
   # 2. https://www.passwordstore.org/
+  # 3. https://superuser.com/questions/624343/keep-gnupg-credentials-cached-for-entire-user-session
   if ! git config --global --get credential.credentialStore > /dev/null 2>&1; then
     info "gcm set store engine"
     if is-macos; then
