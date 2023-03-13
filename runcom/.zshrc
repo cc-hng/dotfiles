@@ -424,12 +424,13 @@ setenv() {
 getenv() {
   if [ $# -gt 1 ]; then echo "Usage: getenv [key]"; return 1; fi
 
+  mkdir -p $MY_ENV_HOME
   if [ $# -eq 1 ]; then
     if [ ! -f "$MY_ENV_HOME/$1" ]; then echo "Error: $1 not found"; return 1; fi
     cat "$MY_ENV_HOME/$1"
   else
     pushd $MY_ENV_HOME
-    for file in *; do 
+    for file in $(ls); do 
       content=$(cat $file)
       echo "$file=$content"
     done
