@@ -3,7 +3,11 @@
 	name = cc
 [core]
 	excludesfile = ~/.local/secret/.gitignore
-[https]
-	proxy = http://127.0.0.1:1081
-[commit]
-	template = ~/.local/secret/git_template.txt
+[credential]
+	helper = 
+	helper = /opt/gcm/git-credential-manager
+	credentialStore = gpg
+[credential "https://dev.azure.com"]
+	useHttpPath = true
+[credential "https://git.l2x.top"]
+	provider = generic

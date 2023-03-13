@@ -84,9 +84,12 @@ setup_gcm() {
   if ! is-executable git-credential-manager && ! is-macos; then
     info "gcm installing"
     pushd /tmp
-    curl -LO https://aka.ms/gcm/linux-install-source.sh \
-      && sh linux-install-source.sh \
-      && rm -f linux-install-source.sh
+    # curl -LO https://aka.ms/gcm/linux-install-source.sh \
+    #   && sh linux-install-source.sh \
+    #   && rm -f linux-install-source.sh
+    wget -c https://github.com/git-ecosystem/git-credential-manager/releases/download/v2.0.935/gcm-linux_amd64.2.0.935.tar.gz
+    sudo tar xf gcm-linux_amd64.2.0.935.tar.gz -C /opt/gcm
+    rm -f gcm-linux_amd64.2.0.935.tar.gz
     popd
   fi
 

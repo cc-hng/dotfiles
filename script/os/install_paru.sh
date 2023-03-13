@@ -35,6 +35,7 @@ yes | paru -S bat       \
     deno                \
     gnu-netcat          \
     pass                \
+    mlocate             \
     lolcat
 
 
