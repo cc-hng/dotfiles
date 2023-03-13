@@ -16,10 +16,15 @@ update_git_repo() {
     fail "$1 is a fatal git repo"
   fi
 
-
   info "Updating repo in >> $1 <<"
   pushd $1  >/dev/null 2>&1
-  git pull --ff --no-edit  >/dev/null 2>&1
+  if ! git diff-index --quiet HEAD; then
+    git stash >/dev/null 2>&1
+    git pull --ff --no-edit  >/dev/null 2>&1
+    git stash pop
+  else
+    git pull --ff --no-edit  >/dev/null 2>&1
+  fi
   popd  >/dev/null 2>&1
 }
 
