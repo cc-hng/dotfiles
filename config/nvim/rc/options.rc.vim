@@ -167,8 +167,8 @@ else
 endif
 
 " Disable statusline when command line
-" autocmd MyAutoCmd CmdlineEnter * set laststatus=0 | redrawstatus
-" autocmd MyAutoCmd CmdlineLeave * set laststatus=2
+autocmd MyAutoCmd CmdlineEnter * set laststatus=0 | redrawstatus
+autocmd MyAutoCmd CmdlineLeave * set laststatus=2
 
 " Does not report lines
 set report=1000
@@ -199,8 +199,8 @@ if has("nvim-0.9.0")
   set showcmdloc=statusline
 endif
 call ToggleStatusline(1)
-autocmd MyAutoCmd CmdlineEnter * call ToggleStatusline(0) | redrawstatus
-autocmd MyAutoCmd CmdlineLeave * call ToggleStatusline(1)
+" autocmd MyAutoCmd CmdlineEnter * call ToggleStatusline(0) | redrawstatus
+" autocmd MyAutoCmd CmdlineLeave * call ToggleStatusline(1)
 
 " NOTE: wrap option is very slow!
 set nowrap

@@ -99,4 +99,5 @@ set secure
 " color base16-everforest
 " color base16-qualia
 
-color tokyonight-moon
+" color tokyonight-moon
+color quiet
