@@ -57,7 +57,7 @@ cnoremap <C-y>          <C-r>+
 cnoremap <C-g>          <C-c>
 " <C-k>: Delete to the end.
 cnoremap <expr><C-k>
-      \ repeat("\<Del>", strchars(getcmdline()[getcmdpos() - 1:]))
+      \ "\<Del>"->repeat(getcmdline()[getcmdpos() - 1:]->strchars())
 
 " [Space]: Other useful commands
 " Smart space mapping.
@@ -79,7 +79,7 @@ nnoremap [Space]l
 
 " Easily edit current buffer
 nnoremap <expr> [Space]e
-      \ bufname('%') !=# '' ? '<Cmd>edit %<CR>' : ''
+      \ '%'->bufname() !=# '' ? '<Cmd>edit %<CR>' : ''
 
 " Quickfix
 nnoremap [Space]q
@@ -91,13 +91,12 @@ nnoremap <Leader><Leader> <Cmd>silent update<CR>
 " s: Windows and buffers(High priority)
 " The prefix key.
 nnoremap s    <Nop>
-" nnoremap sp  <Cmd>vsplit<CR><Cmd>wincmd w<CR>
+nnoremap sp  <Cmd>vsplit<CR><Cmd>wincmd w<CR>
 nnoremap so  <Cmd>only<CR>
 nnoremap <Tab>      <cmd>wincmd w<CR>
 nnoremap <expr> q
       \ &l:filetype ==# 'qf' ? '<Cmd>cclose<CR>' :
-      \ winnr('$') != 1 ? '<Cmd>close<CR>' :
-      \ len(getbufinfo({'buflisted':1})) != 1 ? '<Cmd>Sayonara<CR>' : ''
+      \ '$'->winnr() != 1 ? '<Cmd>close<CR>' : ''
 
 " Original search
 nnoremap s/    /
@@ -114,9 +113,9 @@ nnoremap M  m
 
 " Smart <C-f>, <C-b>.
 noremap <expr> <C-f> max([winheight(0) - 2, 1])
-      \ . '<C-d>' . (line('w$') >= line('$') ? 'L' : 'M')
+      \ .. '<C-d>' .. (line('w$') >= line('$') ? 'L' : 'M')
 noremap <expr> <C-b> max([winheight(0) - 2, 1])
-      \ . '<C-u>' . (line('w0') <= 1 ? 'H' : 'M')
+      \ .. '<C-u>' .. (line('w0') <= 1 ? 'H' : 'M')
 
 " Disable ZZ.
 nnoremap ZZ  <Nop>
@@ -137,9 +136,9 @@ xnoremap s :s//g<Left><Left>
 
 " Sticky shift in English keyboard.
 " Sticky key.
-"inoremap <expr> ;  vimrc#sticky_func()
-"cnoremap <expr> ;  vimrc#sticky_func()
-"snoremap <expr> ;  vimrc#sticky_func()
+inoremap <expr> ;  vimrc#sticky_func()
+cnoremap <expr> ;  vimrc#sticky_func()
+snoremap <expr> ;  vimrc#sticky_func()
 
 " Easy escape.
 inoremap jj           <ESC>
@@ -183,7 +182,7 @@ tnoremap <expr> ;  vimrc#sticky_func()
 tnoremap <C-y>      <C-r>+
 
 " Wordcount
-command! WordCount echo strchars(join(getline(1, '$')))
+command! WordCount echo getline(1, '$')->join()->strchars()
 
 " {visual}p to put without yank to unnamed register
 xnoremap p   P

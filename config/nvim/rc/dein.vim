@@ -1,19 +1,19 @@
-let $CACHE = expand('~/.cache')
-if !isdirectory($CACHE)
+let $CACHE = '~/.cache'->expand()
+if !($CACHE->isdirectory())
   call mkdir($CACHE, 'p')
 endif
 
 " Load dein.
 if &runtimepath !~# '/dein.vim'
-  let s:dein_dir = fnamemodify('dein.vim', ':p')
-  if !isdirectory(s:dein_dir)
-    let s:dein_dir = $CACHE . '/dein/repos/github.com/Shougo/dein.vim'
-    if !isdirectory(s:dein_dir)
+  let s:dein_dir = 'dein.vim'->fnamemodify(':p')
+  if !(s:dein_dir->isdirectory())
+    let s:dein_dir = $CACHE .. '/dein/repos/github.com/Shougo/dein.vim'
+    if !(s:dein_dir->isdirectory())
       execute '!git clone https://github.com/Shougo/dein.vim' s:dein_dir
     endif
   endif
-  execute 'set runtimepath^=' . substitute(
-        \ fnamemodify(s:dein_dir, ':p') , '[/\\]$', '', '')
+  execute 'set runtimepath^=' ..
+        \ s:dein_dir->fnamemodify(':p')->substitute('[/\\]$', '', '')
 endif
 
 
@@ -27,13 +27,13 @@ let g:dein#auto_remote_plugins = v:false
 let g:dein#enable_notification = v:true
 let g:dein#install_check_diff = v:true
 let g:dein#install_check_remote_threshold = 24 * 60 * 60
-let g:dein#install_progress_type = 'echo'
+let g:dein#install_progress_type = 'floating'
 let g:dein#lazy_rplugins = v:true
 let g:dein#types#git#enable_partial_clone = v:true
 
-let s:path = $CACHE . '/dein'
+let s:path = $CACHE .. '/dein'
 if dein#min#load_state(s:path)
-  let s:base_dir = fnamemodify(expand('<sfile>'), ':h') . '/'
+  let s:base_dir = '<sfile>'->expand()->fnamemodify(':h') .. '/'
 
   let g:dein#inline_vimrcs = ['options.rc.vim', 'mappings.rc.vim']
   if has('nvim')
@@ -46,17 +46,17 @@ if dein#min#load_state(s:path)
   else
     call add(g:dein#inline_vimrcs, 'unix.rc.vim')
   endif
-  call map(g:dein#inline_vimrcs, { _, val -> s:base_dir . val })
+  call map(g:dein#inline_vimrcs, { _, val -> s:base_dir .. val })
 
-  let s:dein_toml = s:base_dir . 'dein.toml'
-  let s:dein_lazy_toml = s:base_dir . 'deinlazy.toml'
-  let s:dein_ddc_toml = s:base_dir . 'ddc.toml'
-  let s:dein_ddu_toml = s:base_dir . 'ddu.toml'
-  let s:dein_ft_toml = s:base_dir . 'deinft.toml'
-  let s:dein_neovim_toml = s:base_dir . 'neovim.toml'
-  let s:dein_vim_toml = s:base_dir . 'vim.toml'
+  let s:dein_toml = s:base_dir .. 'dein.toml'
+  let s:dein_lazy_toml = s:base_dir .. 'deinlazy.toml'
+  let s:dein_ddc_toml = s:base_dir .. 'ddc.toml'
+  let s:dein_ddu_toml = s:base_dir .. 'ddu.toml'
+  let s:dein_ft_toml = s:base_dir .. 'deinft.toml'
+  let s:dein_neovim_toml = s:base_dir .. 'neovim.toml'
+  let s:dein_vim_toml = s:base_dir .. 'vim.toml'
 
-  call dein#begin(s:path, expand('<sfile>'))
+  call dein#begin(s:path, '<sfile>'->expand())
 
   call dein#load_toml(s:dein_toml, #{ lazy: 0 })
   call dein#load_toml(s:dein_lazy_toml, #{ lazy: 1 })
@@ -69,8 +69,8 @@ if dein#min#load_state(s:path)
   endif
   call dein#load_toml(s:dein_ft_toml)
 
-  let work_directory = expand('~/ws/vim')
-  if isdirectory(work_directory)
+  let work_directory = '~/work'->expand()
+  if work_directory->isdirectory()
     " Load develop version plugins.
     call dein#local(work_directory,
           \ #{ frozen: 1, merged: 0 }, [

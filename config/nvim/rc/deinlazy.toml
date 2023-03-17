@@ -23,12 +23,12 @@ hook_source = '''
   "if has('nvim')
   "  call jobstart([
   "  \   'deno', 'run', '-A', '--no-check',
-  "  \   g:dein#plugin.path . '/denops/@denops-private/cli.ts',
+  "  \   g:dein#plugin.path .. '/denops/@denops-private/cli.ts',
   "  \ ], {'detach': v:true})
   "else
   "  call job_start([
   "  \   'deno', 'run', '-A', '--no-check',
-  "  \   g:dein#plugin.path . '/denops/@denops-private/cli.ts',
+  "  \   g:dein#plugin.path .. '/denops/@denops-private/cli.ts',
   "  \ ], {'stoponexit': ''})
   "endif
   "let g:denops_server_addr = '127.0.0.1:32123'
@@ -38,8 +38,16 @@ hook_source = '''
 repo = 'Shougo/context_filetype.vim'
 hook_source = '''
   let g:context_filetype#ignore_patterns = #{
-      \ toml: ['^\s*#\s*'],
+      \   toml: ['^\s*#\s*'],
       \ }
+'''
+
+
+[[plugins]]
+repo = 'Shougo/junkfile.vim'
+on_source = ['ddu.vim']
+hook_add = '''
+  nnoremap se <Cmd>Ddu junkfile -volatile<CR>
 '''
 
 [[plugins]]
@@ -53,7 +61,7 @@ hook_add = '''
 [[plugins]]
 repo = 'Shougo/ddx.vim'
 hook_add = '''
-  nnoremap [Space]x <Cmd>Ddx -path=`expand('%')`<CR>
+  nnoremap [Space]x <Cmd>Ddx -path=`'%'->expand()`<CR>
 '''
 hook_source = '''
   call ddu#custom#patch_global(#{
@@ -180,22 +188,22 @@ repo = 'Shougo/qselect.vim'
 [[plugins]]
 repo = 'skanehira/denops-silicon.vim'
 hook_source = '''
-  let g:silicon_options = {
-      \  'font': 'Courier 10 Pitch',
-      \  'no_line_number': v:true,
-      \  'no_round_corner': v:false,
-      \  'no_window_controls': v:false,
-      \  'background_color': '#ffffff',
-      \  'line_offset': 1,
-      \  'line_pad': 2,
-      \  'pad_horiz': 10,
-      \  'pad_vert': 10,
-      \  'shadow_blur_radius': 0,
-      \  'shadow_color': '#555555',
-      \  'shadow_offset_x': 0,
-      \  'shadow_offset_y': 0,
-      \  'tab_width': 4,
-      \  'theme': 'Solarized (dark)',
+  let g:silicon_options = #{
+      \   font: 'Courier 10 Pitch',
+      \   no_line_number: v:true,
+      \   no_round_corner: v:false,
+      \   no_window_controls: v:false,
+      \   background_color: '#ffffff',
+      \   line_offset: 1,
+      \   line_pad: 2,
+      \   pad_horiz: 10,
+      \   pad_vert: 10,
+      \   shadow_blur_radius: 0,
+      \   shadow_color: '#555555',
+      \   shadow_offset_x: 0,
+      \   shadow_offset_y: 0,
+      \   tab_width: 4,
+      \   theme: 'Solarized (dark)',
       \ }
 '''
 
@@ -213,6 +221,9 @@ repo = 'uga-rosa/scorpeon.vim'
 on_cmd = 'VsctmHighlightEnable'
 depends = 'denops.vim'
 hook_source = '''
-  let g:scorpeon_extensions_path = expand('~/.cache/scorpeon/extensions')
+  let g:scorpeon_extensions_path = '~/.cache/scorpeon/extensions'->expand()
 '''
 
+[[plugins]]
+repo = 'lambdalisue/kensaku.vim'
+denops_wait = false

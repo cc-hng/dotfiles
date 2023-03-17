@@ -69,6 +69,7 @@ set hidden
 " Disable folding.
 set nofoldenable
 set foldmethod=manual
+set foldlevel=3
 " Show folding level.
 if has('nvim')
   set foldcolumn=auto:1
@@ -123,15 +124,14 @@ autocmd MyAutoCmd InsertLeave * if &l:diff | diffupdate | endif
 set diffopt=internal,algorithm:patience,indent-heuristic
 
 " Make directory automatically.
-" --------------------------------------
-" http://vim-users.jp/2011/02/hack202/
 autocmd MyAutoCmd BufWritePre *
-      \ call s:mkdir_as_necessary(expand('<afile>:p:h'), v:cmdbang)
+      \ call s:mkdir_as_necessary('<afile>:p:h'->expand(), v:cmdbang)
 function! s:mkdir_as_necessary(dir, force) abort
-  if !isdirectory(a:dir) && &l:buftype ==# '' &&
-        \ (a:force || input(printf('"%s" does not exist. Create? [y/N] ',
-        \              a:dir)) =~? '^y\%[es]$')
-    call mkdir(iconv(a:dir, &encoding, &termencoding), 'p')
+  if !(a:dir->isdirectory()) && &l:buftype ==# '' &&
+        \ (a:force || printf(
+        \ '"%s" does not exist. Create? [y/N] '
+        \ ->input(a:dir)) =~? '^y\%[es]$')
+    call mkdir(a:dir->iconv(&encoding, &termencoding), 'p')
   endif
 endfunction
 
@@ -167,8 +167,8 @@ else
 endif
 
 " Disable statusline when command line
-" autocmd MyAutoCmd CmdlineEnter * set laststatus=0 | redrawstatus
-" autocmd MyAutoCmd CmdlineLeave * set laststatus=2
+"autocmd MyAutoCmd CmdlineEnter * set laststatus=0 | redrawstatus
+"autocmd MyAutoCmd CmdlineLeave * set laststatus=2
 
 " Does not report lines
 set report=1000
@@ -286,7 +286,7 @@ set winheight=1
 set cmdwinheight=5
 " No equal window size.
 set noequalalways
-if exists('+splitscroll')
+if '+splitscroll'->exists()
   " Disable scroll when split
   set nosplitscroll
 endif
@@ -307,7 +307,7 @@ set conceallevel=2
 
 "set colorcolumn=79
 
-if exists('+previewpopup')
+if '+previewpopup'->exists()
   set previewpopup=height:10,width:60
 endif
 
@@ -320,7 +320,7 @@ set cedit=
 set redrawtime=0
 
 " I use <C-w> in terminal mode
-if exists('+termwinkey')
+if '+termwinkey'->exists()
   set termwinkey=<C-L>
 endif
 

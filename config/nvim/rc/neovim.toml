@@ -1,7 +1,8 @@
 [[plugins]]
 repo = 'nvim-treesitter/nvim-treesitter'
+depends = 'impatient.nvim'
 if = '!has("win32")'
-on_event = 'BufRead'
+on_event = ['BufRead', 'CursorHold']
 hook_post_update = 'TSUpdate'
 lua_source = '''
   require'nvim-treesitter.configs'.setup {
@@ -9,21 +10,30 @@ lua_source = '''
       additional_vim_regex_highlighting = false,
       ignore_install = { "norg" },
       highlight = {
-        enable = true,
-        disable = function(lang, buf)
-            if lang == 'help' then
-                return true
-            end
-            local max_filesize = 50 * 1024 -- 50 KB
-            local ok, stats = pcall(vim.loop.fs_stat,
-                                    vim.api.nvim_buf_get_name(buf))
-            if ok and stats and stats.size > max_filesize then
-                return true
-            end
-        end,
+          enable = true,
+            disable = function(lang, buf)
+                if lang == 'help' or lang == 'vim' then
+                  return true
+                end
+                local max_filesize = 50 * 1024 -- 50 KB
+                local ok, stats = pcall(vim.loop.fs_stat,
+                                        vim.api.nvim_buf_get_name(buf))
+                if ok and stats and stats.size > max_filesize then
+                    return true
+                end
+            end,
       },
   }
 '''
+
+[[plugins]]
+repo = 'lewis6991/impatient.nvim'
+# lua_source = '''
+#   require('impatient')
+# '''
+
+[[plugins]]
+repo = 'nvim-lua/plenary.nvim'
 
 [[plugins]]
 repo = 'MunifTanjim/nui.nvim'
@@ -31,8 +41,8 @@ repo = 'MunifTanjim/nui.nvim'
 [[plugins]]
 repo = 'neovim/nvim-lspconfig'
 on_ft = ['c', 'cpp', 'cmake', 'dart', 'typescript', 'javascript', 'go', 'python']
+depends = ['impatient.nvim', 'ddc.vim']
 if = 'has("nvim")'
-depends = 'ddc.vim'
 lua_source = '''
   local on_attach = function(client, bufnr)
     local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
@@ -302,4 +312,20 @@ lua_source = '''
       map({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
     end,
   }
+'''
+
+[[plugins]]
+repo = 'atusy/tsnode-marker.nvim'
+on_ft = 'markdown'
+lua_source = '''
+  vim.api.nvim_create_autocmd("FileType", {
+    group = vim.api.nvim_create_augroup("tsnode-marker-markdown", {}),
+    pattern = "markdown",
+    callback = function(ctx)
+      require("tsnode-marker").set_automark(ctx.buf, {
+        target = { "code_fence_content" }, -- list of target node types
+        hl_group = "CursorLine", -- highlight group
+      })
+    end,
+  })
 '''
