@@ -136,16 +136,16 @@ xnoremap s :s//g<Left><Left>
 
 " Sticky shift in English keyboard.
 " Sticky key.
-inoremap <expr> ;  vimrc#sticky_func()
-cnoremap <expr> ;  vimrc#sticky_func()
-snoremap <expr> ;  vimrc#sticky_func()
+" inoremap <expr> ;  vimrc#sticky_func()
+" cnoremap <expr> ;  vimrc#sticky_func()
+" snoremap <expr> ;  vimrc#sticky_func()
 
 " Easy escape.
-inoremap jj           <ESC>
+" inoremap jj           <ESC>
 cnoremap <expr> j
       \ getcmdline()[getcmdpos()-2] ==# 'j' ? '<BS><C-c>' : 'j'
 
-inoremap j<Space>     j
+" inoremap j<Space>     j
 
 " a>, i], etc...
 " <angle>
