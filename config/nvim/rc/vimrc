@@ -99,4 +99,6 @@ set secure
 " color base16-qualia
 
 " color tokyonight-moon
-color quiet
+" color quiet
+" color tokyonight-day
+color OceanicNext

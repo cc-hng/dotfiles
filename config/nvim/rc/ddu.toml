@@ -57,11 +57,6 @@ hook_add = '''
   \ -ui-param-autoResize<CR>'
   nnoremap sg <Cmd>Ddu
   \ dein<CR>
-  nnoremap [Space]<Space> <Cmd>Ddu
-  \ -name=search line -resume=v:false
-  \ -source-param-range=window
-  \ -ui-param-startFilter
-  \ <CR>
 
   "inoremap <C-q> <Cmd>Ddu
   "\ -name=register register
