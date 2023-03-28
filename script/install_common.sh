@@ -78,43 +78,6 @@ setup_nextword() {
   rm -rf ${temp_dir}
 }
 
-# use to store git(password) in secret
-setup_gcm() {
-  # refer: https://github.com/git-ecosystem/git-credential-manager/blob/main/docs/install.md#install-from-source-helper-script
-  if ! is-executable git-credential-manager && ! is-macos; then
-    info "gcm installing"
-    pushd /tmp
-    # curl -LO https://aka.ms/gcm/linux-install-source.sh \
-    #   && sh linux-install-source.sh \
-    #   && rm -f linux-install-source.sh
-    wget -c https://github.com/git-ecosystem/git-credential-manager/releases/download/v2.0.935/gcm-linux_amd64.2.0.935.tar.gz
-    sudo tar xf gcm-linux_amd64.2.0.935.tar.gz -C /opt/gcm
-    rm -f gcm-linux_amd64.2.0.935.tar.gz
-    popd
-  fi
-
-  gcm_exe=git-credential-manager
-  if git config --global --get credential.helper | rg -w "${gcm_exe}" > /dev/null 2>&1; then
-    user "gcm already configured"
-  else
-    info "gcm configuring"
-    ${gcm_exe} configure
-  fi
-
-  # refer:
-  # 1. https://github.com/git-ecosystem/git-credential-manager/blob/main/docs/credstores.md#gpgpass-compatible-files
-  # 2. https://www.passwordstore.org/
-  # 3. https://superuser.com/questions/624343/keep-gnupg-credentials-cached-for-entire-user-session
-  if ! git config --global --get credential.credentialStore > /dev/null 2>&1; then
-    info "gcm set store engine"
-    if is-macos; then
-      git config --global credential.credentialStore keychain
-    else
-      git config --global credential.credentialStore gpg
-    fi
-  fi
-}
-
 check_required
 #setup_nextword
 setup_vcpkg
