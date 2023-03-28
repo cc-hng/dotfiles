@@ -18,6 +18,10 @@ if ! is-executable git-credential-manager && ! is-macos; then
   #   && rm -f linux-install-source.sh
   pkg="gcm-linux_${gcm_arch}.${gcm_version}.tar.gz"
   wget -c https://github.com/git-ecosystem/git-credential-manager/releases/download/v${gcm_version}/${pkg}
+  if [[ -d /opt/gcm ]]; then
+    fail "/opt/gcm already exists"
+  fi
+  sudo mkdir -p /opt/gcm
   sudo tar xf ${pkg} -C /opt/gcm
   rm -f ${pkg}
   popd
