@@ -171,7 +171,7 @@ elif [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] ; then
   PROMPT="%{$fg[white]%}[${HOST%%.*} "
   PROMPT+='%{$fg[green]%}%1d%{$fg[white]%}] '
   PROMPT+='%(?.%(!.%F{white}%F{yellow}%F{red}.%F{green})%f.%F{red}%f)%{[$[32+$RANDOM % 6]m%}%B%#'"%b%{%} "
-  RPROMPT='%{[m%}$(gitprompt)'
+  #RPROMPT='%{[m%}$(gitprompt)'
 else;
   PROMPT='%{$fg[white]%}[%{$fg[green]%}%35<..<%1d%{$fg[white]%}] '
   PROMPT+='%{[$[32+$RANDOM % 6]m%}%B%#'"%b%{%} "

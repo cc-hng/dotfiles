@@ -24,4 +24,10 @@ fi
 update-pip
 
 # deno
-if is-executable deno && ! is-macos; then sudo -E deno upgrade; fi
+if is-executable deno && ! is-macos; then
+  if is-local deno; then
+    deno upgrade
+  else
+    sudo -E deno upgrade;
+  fi
+fi
