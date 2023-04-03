@@ -6,7 +6,10 @@ my_temp_dir=$(mktemp -d /tmp/zerotier.XXXXXX)
 set -e
 
 # install from offical
-curl -s https://install.zerotier.com | sudo bash
+if ! type zerotier-cli >/dev/null 2>&1; then
+  echo "zerotier has already installed"
+  curl -s https://install.zerotier.com | sudo bash
+fi
 
 # replace planet
 pushd ${my_temp_dir}
