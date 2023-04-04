@@ -9,9 +9,6 @@ hook_add = '''
   \ -source-option-path='`dein#util#_get_myvimrc()->fnamemodify(':p:h').'/rc'`'
   \ <CR>
   nnoremap ss
-  \ <Cmd>Ddu -name=files buffer
-  \ -sync -ui-param-displaySourceName=short<CR>
-  nnoremap sp
   \ <Cmd>Ddu -name=files file_point file_old
   \ `'.git'->finddir(';') != '' ? 'file_external' : 'file'`
   \ file -source-param-new
@@ -36,7 +33,7 @@ hook_add = '''
   \ -name=search rg -resume=v:false
   \ -ui-param-ignoreEmpty
   \ -source-param-input=`'Pattern: '->input('<cword>'->expand())`
-  \ -source-param-path=`'Directory: '->input('', 'dir')`
+  \ -source-option-path=`'Directory: '->input(getcwd() .. '/', 'dir')`
   \ <CR>
   nnoremap n <Cmd>Ddu
   \ -name=search -resume
@@ -51,8 +48,8 @@ hook_add = '''
   \ -name=outline markdown
   \ -ui-param-ignoreEmpty -ui-param-displayTree
   \ <CR>
-  xnoremap <expr> ;r (mode() ==# 'V' ? '"_R<Esc>' : '"_d') .
-  \ '<Cmd>Ddu -name=register register
+  xnoremap <expr> ;r (mode() ==# 'V' ? '"_R<Esc>' : '"_d')
+  \ .. '<Cmd>Ddu -name=register register
   \ -source-option-defaultAction=insert
   \ -ui-param-autoResize<CR>'
   nnoremap sg <Cmd>Ddu
@@ -139,7 +136,9 @@ hook_source = '''
       \     },
       \     file_old: #{
       \       matchers: [
-      \         'matcher_substring', 'matcher_relative',
+      \         'matcher_substring',
+      \         'matcher_relative',
+      \         'matcher_ignore_current_buffer',
       \       ],
       \     },
       \     file_external: #{
@@ -172,6 +171,11 @@ hook_source = '''
       \     path_history: #{
       \       defaultAction: 'uiCd',
       \     },
+      \     rg: #{
+      \       matchers: [
+      \         'matcher_substring', 'matcher_files',
+      \       ],
+      \     },
       \   },
       \   sourceParams: #{
       \     file_external: #{
@@ -193,7 +197,8 @@ hook_source = '''
       \       highlightMatched: 'Search',
       \     },
       \     matcher_ignore_files: #{
-      \       ignorePatterns: ['/test_[^/]*.vim$'],
+      \       ignoreGlobs: ['test_*.vim'],
+      \       ignorePatterns: [],
       \     },
       \   },
       \   kindOptions: #{
@@ -241,16 +246,16 @@ hook_source = '''
   call ddu#custom#action('kind', 'file', 'grep',
       \ { args -> GrepAction(args) })
   function! GrepAction(args)
-    let path = a:args.items[0].action.path
-    let directory = path->isdirectory() ? path : path->fnamemodify(':h')
+    const path = a:args.items[0].action.path
+    const directory = path->isdirectory() ? path : path->fnamemodify(':h')
 
     call ddu#start(#{
         \   name: a:args.options.name,
         \   push: v:true,
         \   sources: [
-        \     {
+        \     #{
         \       name: 'rg',
-        \       params: {
+        \       params: #{
         \         path: path,
         \         input: 'Pattern: '->input(),
         \       },
@@ -263,8 +268,8 @@ hook_source = '''
   call ddu#custom#action('kind', 'file', 'uiCd',
       \ { args -> UiCdAction(args) })
   function! UiCdAction(args)
-    let path = a:args.items[0].action.path
-    let directory = path->isdirectory() ? path : path->fnamemodify(':h')
+    const path = a:args.items[0].action.path
+    const directory = path->isdirectory() ? path : path->fnamemodify(':h')
 
     call ddu#ui#do_action('itemAction',
             \ #{ name: 'narrow', params: #{ path: directory } })
@@ -301,6 +306,8 @@ ddu-ff = '''
   \ <Cmd>call ddu#ui#do_action('quit')<CR>
   nnoremap <buffer> a
   \ <Cmd>call ddu#ui#do_action('chooseAction')<CR>
+  nnoremap <buffer> A
+  \ <Cmd>call ddu#ui#do_action('inputAction')<CR>
   nnoremap <buffer> o
   \ <Cmd>call ddu#ui#do_action('expandItem',
   \ #{ mode: 'toggle' })<CR>
@@ -334,9 +341,9 @@ ddu-ff = '''
   " Switch options
   nnoremap <buffer> u
   \ <Cmd>call ddu#ui#do_action('updateOptions', #{
-  \   sourceOptions: #{
-  \     _: #{
-  \       matchers: [],
+  \   filterParams: #{
+  \     matcher_files: #{
+  \       globs: 'Filter files: '->input('', 'file')->split(','),
   \     },
   \   },
   \ })<CR>
@@ -348,6 +355,14 @@ ddu-ff = '''
   \     #{ name: 'file' },
   \   ],
   \ })<CR>
+
+  " Cursor move
+  nnoremap <C-n>
+  \ <Cmd>call ddu#ui_action('files', 'cursorNext')<CR>
+  \ <Cmd>call ddu#ui_action('files', 'itemAction')<CR>
+  nnoremap <C-p>
+  \ <Cmd>call ddu#ui_action('files', 'cursorPrevious')<CR>
+  \ <Cmd>call ddu#ui_action('files', 'itemAction')<CR>
 '''
 ddu-ff-filter = '''
   inoremap <buffer> <CR>
@@ -377,19 +392,21 @@ ddu-filer = '''
   \ <Cmd>call ddu#ui#do_action('toggleAllItems')<CR>
   nnoremap <buffer> a
   \ <Cmd>call ddu#ui#do_action('chooseAction')<CR>
+  nnoremap <buffer> A
+  \ <Cmd>call ddu#ui#do_action('inputAction')<CR>
   nnoremap <buffer> q
   \ <Cmd>call ddu#ui#do_action('quit')<CR>
   nnoremap <buffer> o
   \ <Cmd>call ddu#ui#do_action('expandItem',
-  \ {'mode': 'toggle'})<CR>
+  \ #{ mode: 'toggle' })<CR>
   nnoremap <buffer> O
   \ <Cmd>call ddu#ui#do_action('expandItem',
-  \ {'maxLevel': -1})<CR>
+  \ #{ maxLevel: -1 })<CR>
   "nnoremap <buffer> O
   "\ <Cmd>call ddu#ui#do_action('collapseItem')<CR>
   nnoremap <buffer> c
   \ <Cmd>call ddu#ui#multi_actions([
-  \   ['itemAction', {'name': 'copy'}],
+  \   ['itemAction', #{ name: 'copy' }],
   \   ['clearSelectAllItems'],
   \ ])<CR>
   nnoremap <buffer> d
@@ -464,10 +481,10 @@ ddu-filer = '''
   \ })<CR>
 
   function! ToggleHidden(name)
-    let current = ddu#custom#get_current(b:ddu_ui_name)
-    let source_options = current->get('sourceOptions', {})
-    let source_options_name = source_options->get(a:name, {})
-    let matchers = source_options_name->get('matchers', [])
+    const current = ddu#custom#get_current(b:ddu_ui_name)
+    const source_options = current->get('sourceOptions', {})
+    const source_options_name = source_options->get(a:name, {})
+    const matchers = source_options_name->get('matchers', [])
     return matchers->empty() ? ['matcher_hidden'] : []
   endfunction
 '''
@@ -537,7 +554,15 @@ repo = 'Shougo/ddu-filter-matcher_hidden'
 on_source = 'ddu.vim'
 
 [[plugins]]
+repo = 'Shougo/ddu-filter-matcher_files'
+on_source = 'ddu.vim'
+
+[[plugins]]
 repo = 'Shougo/ddu-filter-matcher_ignore_files'
+on_source = 'ddu.vim'
+
+[[plugins]]
+repo = 'Shougo/ddu-filter-matcher_ignore_current_buffer'
 on_source = 'ddu.vim'
 
 [[plugins]]
@@ -565,9 +590,6 @@ on_source = 'ddu.vim'
 repo = 'Shougo/ddu-kind-word'
 on_source = 'ddu.vim'
 
-[[plugins]]
-repo = 'Shougo/ddu-source-buffer'
-on_source = 'ddu.vim'
 
 [[plugins]]
 repo = '4513ECHO/ddu-source-colorscheme'

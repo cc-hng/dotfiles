@@ -265,6 +265,7 @@ let g:terminal_shell='zsh'
 [[plugins]]
 repo = "lewis6991/gitsigns.nvim"
 on_event = ['BufReadPre', 'BufNewFile']
+if = '0'
 lua_source = '''
   require('gitsigns').setup {
     current_line_blame = false,
@@ -316,6 +317,7 @@ lua_source = '''
 
 [[plugins]]
 repo = 'atusy/tsnode-marker.nvim'
+if = '0'
 on_ft = 'markdown'
 lua_source = '''
   vim.api.nvim_create_autocmd("FileType", {
