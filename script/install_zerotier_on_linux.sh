@@ -1,6 +1,6 @@
 #!/bin/bash
 
-my_planet_url="https://git.l2x.top/cc/files/raw/commit/a02f8506da1fe6939c0b5c81488e80b5a95c6764/planet"
+my_planet_url="https://git.l2x.top/cc/files/raw/branch/master/planet"
 my_temp_dir=$(mktemp -d /tmp/zerotier.XXXXXX)
 
 set -e
