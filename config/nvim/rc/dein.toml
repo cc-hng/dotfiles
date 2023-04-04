@@ -43,3 +43,8 @@ repo = 'mhartington/oceanic-next'
 [[plugins]]
 repo = 'Th3Whit3Wolf/one-nvim'
 
+[[plugins]]
+repo = 'mhinz/vim-janah'
+
+[[plugins]]
+repo = 'NTBBloodbath/doom-one.nvim'

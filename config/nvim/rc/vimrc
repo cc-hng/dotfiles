@@ -101,4 +101,5 @@ set secure
 " color tokyonight-moon
 " color quiet
 " color tokyonight-day
-color OceanicNext
+" color OceanicNext
+color doom-one
