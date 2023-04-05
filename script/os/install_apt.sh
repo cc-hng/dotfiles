@@ -70,3 +70,9 @@ if ! is-executable deno; then
   info 'deno installing'
   curl -fsSL https://deno.land/install.sh | sh
 fi
+
+# set locale
+info "set locale"
+sudo locale-gen "en_US.UTF-8"
+sudo update-locale LC_ALL="en_US.UTF-8"
+
