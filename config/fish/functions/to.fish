@@ -11,5 +11,5 @@ function to -d "tmux "
     return 1
   end
 
-  tmux new -s $argv[1] || tmux a -t $argv[1]
+  TERM=xterm-256color tmux new -s $argv[1] || TERM=xterm-256color tmux a -t $argv[1]
 end
