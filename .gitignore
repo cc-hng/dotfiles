@@ -3,6 +3,6 @@ runcom/.tmux/plugins
 runcom/.tmux/resurrect
 script/conf/macos/Brewfile.lock.json
 script/conf/macos/Caskfile.lock.json
-config/fish/fish_variables
 runcom/.gitconfig
 runcom/.gnupg/
+config/fish/fish_variables
