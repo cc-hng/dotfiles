@@ -7,7 +7,7 @@ function proxyon
   set -f port $kv[2]
 
   echo "proxyon: $ip:$port"
-  if nc -z $ip $port > /dev/null
+  if nc -z $ip $port > /dev/null 2>&1
     export http_proxy="http://$ip:$port"
     export https_proxy="http://$ip:$port"
     export no_proxy="kubernetes.docker.internal,localhost,127.0.0.1,mirrors.ustc.edu.cn,mirrors.tencentyun.com"
