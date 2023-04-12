@@ -1,10 +1,14 @@
 # Defined interactively
 function fish_prompt
-    # if test -n "$SSH_TTY"
-    #     echo -n (set_color brred)"$USER"(set_color white)'@'(set_color yellow)(prompt_hostname)' '
-    # end
+    if test -n "$SSH_TTY"
+        echo -n (set_color white)'['
+        echo -n (set_color normal)(prompt_hostname)' '
+        echo -n (set_color green)(basename (prompt_pwd))
+        echo -n (set_color white)'] '
+    else
+        echo -n (set_color green)(prompt_pwd)' '
+    end
 
-    echo -n (set_color green)(prompt_pwd)' '
 
     set_color -o
     if test "$USER" = root

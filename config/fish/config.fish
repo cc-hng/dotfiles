@@ -93,3 +93,4 @@ alias ct="cmake --build build -j --target"
 set -l MY_SECRET_HOME $HOME/.local/secret
 [ -f  $MY_SECRET_HOME/config.fish ] && source $MY_SECRET_HOME/config.fish
 [ -f /usr/local/share/autojump/autojump.fish ] && source /usr/local/share/autojump/autojump.fish
+[ -f /usr/share/autojump/autojump.fish ] && source /usr/share/autojump/autojump.fish

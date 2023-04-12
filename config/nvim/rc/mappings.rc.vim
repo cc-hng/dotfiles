@@ -91,7 +91,7 @@ nnoremap <Leader><Leader> <Cmd>silent update<CR>
 " s: Windows and buffers(High priority)
 " The prefix key.
 nnoremap s    <Nop>
-nnoremap sp  <Cmd>vsplit<CR><Cmd>wincmd w<CR>
+"nnoremap sp  <Cmd>vsplit<CR><Cmd>wincmd w<CR>
 nnoremap so  <Cmd>only<CR>
 nnoremap <Tab>      <cmd>wincmd w<CR>
 nnoremap <expr> q
