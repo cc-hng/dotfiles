@@ -4,12 +4,12 @@ function myenv -d "my env variable"
 
   # print all env
   if test (count $argv) -eq 0
-    pushd $MY_ENV_HOME
+    pushd $MY_ENV_HOME > /dev/null
     for k in (ls)
       set -l v (cat $k)
       echo "$k=$v"
     end
-    popd
+    popd > /dev/null
   end
 
   # setenv
