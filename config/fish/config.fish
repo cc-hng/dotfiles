@@ -88,6 +88,7 @@ end
 alias cmaked="cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug -DUSE_CCACHE=ON -DUSE_SANITIZER='Address;Undefined'"
 alias cbuild="cmake --build build -j"
 alias cb=cbuild
+alias cb2="cmake --build build2 -j"
 alias ct="cmake --build build -j --target"
 
 set -l MY_SECRET_HOME $HOME/.local/secret
