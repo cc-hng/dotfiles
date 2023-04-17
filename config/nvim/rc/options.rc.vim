@@ -127,10 +127,12 @@ set diffopt=internal,algorithm:patience,indent-heuristic
 autocmd MyAutoCmd BufWritePre *
       \ call s:mkdir_as_necessary('<afile>:p:h'->expand(), v:cmdbang)
 function! s:mkdir_as_necessary(dir, force) abort
-  if !(a:dir->isdirectory()) && &l:buftype ==# '' &&
-        \ (a:force || printf(
-        \ '"%s" does not exist. Create? [y/N] '
-        \ ->input(a:dir)) =~? '^y\%[es]$')
+  if a:dir->isdirectory() || &l:buftype !=# ''
+    return
+  endif
+
+  if a:force || printf('"%s" does not exist. Create? [y/N] '
+        \              ->input(a:dir)) =~? '^y\%[es]$'
     call mkdir(a:dir->iconv(&encoding, &termencoding), 'p')
   endif
 endfunction
@@ -257,18 +259,16 @@ let g:did_install_default_menus = v:true
 
 " Completion setting.
 set completeopt=menuone
-if exists('+completepopup')
+if '+completepopup'->exists()
   set completeopt+=popup
   set completepopup=height:4,width:60,highlight:InfoPopup
 endif
 " Don't complete from other buffer.
 set complete=.
 " Set popup menu max height.
-set pumheight=8
-if exists('+pumwidth')
-  " Set popup menu min width.
-  set pumwidth=0
-endif
+set pumheight=5
+" Set popup menu min width.
+set pumwidth=0
 " Use "/" for path completion
 set completeslash=slash
 

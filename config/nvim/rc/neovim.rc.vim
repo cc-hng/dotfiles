@@ -16,8 +16,8 @@ let g:python3_host_prog = has('win32') ? 'python.exe' : 'python3'
 
 set inccommand=nosplit
 
-set pumblend=0
-set winblend=0
+set pumblend=20
+set winblend=20
 
 " Modifiable terminal
 autocmd MyAutoCmd TermOpen * setlocal modifiable
@@ -41,8 +41,8 @@ if 'g:nvui'->exists()
 
   " NOTE: nvui does not use 'titlestring'
   autocmd MyAutoCmd
-        \ BufWritePost,TextChanged,TextChangedI,BufEnter,DirChanged *
-        \ call rpcnotify(1, 'NVUI_TB_TITLE', printf('%s%s%s (%s)',
+        \ BufWritePost,TextChanged,TextChangedI,BufEnter,DirChanged
+        \ * call rpcnotify(1, 'NVUI_TB_TITLE', printf('%s%s%s (%s)',
         \ &l:readonly ? '[-]' : '',
         \ &l:modified ? '[+]' : '',
         \ '%:p:~:.'->expand(),
