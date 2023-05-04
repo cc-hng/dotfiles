@@ -10,6 +10,8 @@ nnoremap ss
       \ -sync -unique
       \ -ui-param-displaySourceName=short
       \ <CR>
+nnoremap sr
+      \ <Cmd>Ddu -name=files -resume<CR>
 nnoremap / <Cmd>Ddu
       \ -name=search line -resume=v:false
       \ -ui-param-startFilter
@@ -23,6 +25,11 @@ nnoremap ;g <Cmd>Ddu
       \ -name=search rg -resume=v:false
       \ -ui-param-ignoreEmpty
       \ -source-param-input=`'Pattern: '->input('<cword>'->expand())`
+      \ <CR>
+xnoremap ;g y<Cmd>Ddu
+      \ -name=search rg -resume=v:false
+      \ -ui-param-ignoreEmpty
+      \ -source-param-input=`'Pattern: '->input(v:register->getreg())`
       \ <CR>
 nnoremap ;f <Cmd>Ddu
       \ -name=search rg -resume=v:false
@@ -119,6 +126,7 @@ call ddu#custom#patch_global(#{
       \         floating: 'Normal',
       \       },
       \       updateTime: 0,
+      \       winWidth: 100,
       \     },
       \     filer: #{
       \       split: 'no',
@@ -238,7 +246,7 @@ call ddu#custom#patch_global(#{
 call ddu#custom#patch_local('files', #{
       \   uiParams: #{
       \     ff: #{
-      \       split: has('nvim') ? 'floating' : 'horizontal',
+      \       split: 'floating',
       \     }
       \   },
       \ })

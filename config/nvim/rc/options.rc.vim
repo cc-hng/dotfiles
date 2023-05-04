@@ -89,16 +89,17 @@ set isfname+=@-@
 
 " Better for <C-w> deletion
 autocmd MyAutoCmd CmdlineEnter *
-      \ let s:save_iskeyword = &l:iskeyword |
-      \ setlocal iskeyword+=. | setlocal iskeyword+=-
+      \ : let s:save_iskeyword = &l:iskeyword
+      \ | setlocal iskeyword+=.
+      \ | setlocal iskeyword+=-
 autocmd MyAutoCmd CmdlineLeave *
       \ let &l:iskeyword = s:save_iskeyword
 
 " Keymapping timeout.
-set timeout timeoutlen=1000 ttimeoutlen=200
+set timeout timeoutlen=500 ttimeoutlen=100
 
 " CursorHold time.
-set updatetime=500
+set updatetime=1000
 
 " Set swap directory.
 set directory-=.
@@ -115,11 +116,19 @@ set keywordprg=:help
 
 " Disable paste.
 autocmd MyAutoCmd InsertLeave *
-      \ if &paste | setlocal nopaste | echo 'nopaste' | endif |
-      \ if &l:diff | diffupdate | endif
+      \ : if &paste
+      \ |   setlocal nopaste
+      \ |   echo 'nopaste'
+      \ | endif
+      \ | if &l:diff
+      \ |   diffupdate
+      \ | endif
 
 " Update diff.
-autocmd MyAutoCmd InsertLeave * if &l:diff | diffupdate | endif
+autocmd MyAutoCmd InsertLeave *
+      \ : if &l:diff
+      \ |   diffupdate
+      \ | endif
 
 set diffopt=internal,algorithm:patience,indent-heuristic
 
@@ -131,8 +140,8 @@ function! s:mkdir_as_necessary(dir, force) abort
     return
   endif
 
-  if a:force || printf('"%s" does not exist. Create? [y/N] '
-        \              ->input(a:dir)) =~? '^y\%[es]$'
+  if a:force || $'"{a:dir}" does not exist. Create? [y/N] '
+        \       ->input() =~? '^y\%[es]$'
     call mkdir(a:dir->iconv(&encoding, &termencoding), 'p')
   endif
 endfunction
@@ -150,6 +159,10 @@ set spelloptions+=camel
 set fileformat=unix
 " Automatic recognition of a new line cord.
 set fileformats=unix,dos,mac
+
+" Disable editorconfig
+let g:editorconfig = v:false
+
 
 "---------------------------------------------------------------------------
 " View:
@@ -326,4 +339,6 @@ if '+termwinkey'->exists()
   set termwinkey=<C-L>
 endif
 
-" autocmd MyAutoCmd FileType * setl cursorline
+if '+smoothscroll'->exists()
+  set smoothscroll
+endif
