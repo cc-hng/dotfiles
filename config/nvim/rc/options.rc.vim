@@ -161,7 +161,7 @@ set fileformat=unix
 set fileformats=unix,dos,mac
 
 " Disable editorconfig
-let g:editorconfig = v:false
+let g:editorconfig = v:true
 
 
 "---------------------------------------------------------------------------
