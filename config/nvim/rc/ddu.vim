@@ -5,16 +5,17 @@ nnoremap s<Space> <Cmd>Ddu
       \ <CR>
 nnoremap ss
       \ <Cmd>Ddu -name=files file_point file_old
-      \ `'.git'->finddir(';') != '' ? 'file_external' : 'file'`
+      \ `'.git'->finddir(';') != '' ? 'file_external' : ''`
+      \ file -source-option-volatile
       \ file -source-param-new -source-option-volatile
-      \ -sync -unique
+      \ -unique -expandInput
       \ -ui-param-displaySourceName=short
       \ <CR>
 nnoremap sr
       \ <Cmd>Ddu -name=files -resume<CR>
 nnoremap / <Cmd>Ddu
       \ -name=search line -resume=v:false
-      \ -ui-param-startFilter
+      \ -ui-param-startFilter=v:false
       \ <CR>
 nnoremap * <Cmd>Ddu
       \ -name=search line -resume=v:false
@@ -24,18 +25,18 @@ nnoremap * <Cmd>Ddu
 nnoremap ;g <Cmd>Ddu
       \ -name=search rg -resume=v:false
       \ -ui-param-ignoreEmpty
-      \ -source-param-input=`'Pattern: '->input('<cword>'->expand())`
+      \ -source-param-input='`'Pattern: '->input('<cword>'->expand())`'
       \ <CR>
 xnoremap ;g y<Cmd>Ddu
       \ -name=search rg -resume=v:false
       \ -ui-param-ignoreEmpty
-      \ -source-param-input=`'Pattern: '->input(v:register->getreg())`
+      \ -source-param-input='`'Pattern: '->input(v:register->getreg())`'
       \ <CR>
 nnoremap ;f <Cmd>Ddu
       \ -name=search rg -resume=v:false
       \ -ui-param-ignoreEmpty
-      \ -source-param-input=`'Pattern: '->input('<cword>'->expand())`
-      \ -source-option-path=`'Directory: '->input(getcwd() .. '/', 'dir')`
+      \ -source-param-input='`'Pattern: '->input('<cword>'->expand())`'
+      \ -source-option-path=`'Directory: '->input($'{getcwd()}/', 'dir')`
       \ <CR>
 nnoremap n <Cmd>Ddu
       \ -name=search -resume
@@ -64,6 +65,7 @@ nnoremap [Space]<Space> <Cmd>Ddu
 
 "inoremap <C-q> <Cmd>Ddu
 "\ -name=register register
+"\ -sync
 "\ -source-option-defaultAction=append
 "\ -source-param-range=window
 "\ -ui-param-startFilter=v:false
@@ -71,6 +73,7 @@ nnoremap [Space]<Space> <Cmd>Ddu
 inoremap <C-q> <Cmd>call ddu#start(#{
       \   name: 'file',
       \   ui: 'ff',
+      \   sync: v:true,
       \   input: '.'->getline()[: '.'->col() - 1]->matchstr('\f*$'),
       \   sources: [
       \     #{ name: 'file', options: #{ defaultAction: 'feedkeys' } },
@@ -84,6 +87,7 @@ inoremap <C-q> <Cmd>call ddu#start(#{
       \ })<CR>
 "cnoremap <C-q> <Cmd>Ddu
 "\ -name=register register
+"\ -sync
 "\ -source-option-defaultAction=feedkeys
 "\ -source-param-range=window
 "\ -ui-param-startFilter=v:false
@@ -91,6 +95,7 @@ inoremap <C-q> <Cmd>call ddu#start(#{
 cnoremap <C-q> <Cmd>call ddu#start(#{
       \   name: 'file',
       \   ui: 'ff',
+      \   sync: v:true,
       \   input: getcmdline()[: getcmdpos() - 2]->matchstr('\f*$'),
       \   sources: [
       \     #{ name: 'file', options: #{ defaultAction: 'feedkeys' } },
@@ -102,179 +107,20 @@ cnoremap <C-q> <Cmd>call ddu#start(#{
       \     },
       \   },
       \ })<CR><Cmd>call setcmdline('')<CR><CR>
-}}}
+
+" Initialize ddu.vim lazily.
+call timer_start(10, { _ ->
+      \   ddu#start(#{
+      \     ui: 'ff',
+      \     uiParams: #{
+      \       ff: #{
+      \         ignoreEmpty: v:true,
+      \       },
+      \     },
+      \   })
+      \ })
+" }}}
 
 " hook_source = {{{
-call ddu#custom#alias('source', 'file_rg', 'file_external')
-call ddu#custom#alias('action', 'tabopen', 'open')
-
-call ddu#custom#patch_global(#{
-      \   ui: 'ff',
-      \   uiOptions: #{
-      \     filer: #{
-      \       toggle: v:true,
-      \     },
-      \   },
-      \   uiParams: #{
-      \     ff: #{
-      \       filterSplitDirection: 'floating',
-      \       floatingBorder: 'single',
-      \       winRow: &lines/2-11>0?&lines/2-11:0,
-      \       previewFloating: v:true,
-      \       previewSplit: 'no',
-      \       highlights: #{
-      \         floating: 'Normal',
-      \       },
-      \       updateTime: 0,
-      \       winWidth: 100,
-      \     },
-      \     filer: #{
-      \       split: 'no',
-      \       sort: 'filename',
-      \       sortTreesFirst: v:true,
-      \       toggle: v:true,
-      \     },
-      \   },
-      \   sourceOptions: #{
-      \     _: #{
-      \       ignoreCase: v:true,
-      \       matchers: ['matcher_substring'],
-      \     },
-      \     file_old: #{
-      \       matchers: [
-      \         'matcher_substring',
-      \         'matcher_relative',
-      \         'matcher_ignore_current_buffer',
-      \       ],
-      \     },
-      \     file_external: #{
-      \       matchers: [
-      \         'matcher_substring',
-      \       ],
-      \     },
-      \     file_rec: #{
-      \       matchers: [
-      \         'matcher_substring', 'matcher_hidden',
-      \       ],
-      \     },
-      \     file: #{
-      \       matchers: [
-      \         'matcher_substring', 'matcher_hidden',
-      \       ],
-      \       sorters: ['sorter_alpha'],
-      \     },
-      \     dein: #{
-      \       defaultAction: 'cd',
-      \     },
-      \     markdown: #{
-      \       sorters: [],
-      \     },
-      \     line: #{
-      \       matchers: [
-      \         'matcher_kensaku',
-      \       ],
-      \     },
-      \     path_history: #{
-      \       defaultAction: 'uiCd',
-      \     },
-      \     rg: #{
-      \       matchers: [
-      \         'matcher_substring', 'matcher_files',
-      \       ],
-      \     },
-      \   },
-      \   sourceParams: #{
-      \     file_external: #{
-      \       cmd: ['git', 'ls-files', '-co', '--exclude-standard'],
-      \     },
-      \     rg: #{
-      \       args: [
-      \         '--ignore-case', '--column', '--no-heading',
-      \         '--color', 'never',
-      \       ],
-      \     },
-      \     file_rg: #{
-      \       cmd: [
-      \         'rg', '--files', '--glob', '!.git',
-      \         '--color', 'never', '--no-messages'],
-      \       updateItems: 50000,
-      \     },
-      \   },
-      \   filterParams: #{
-      \     matcher_kensaku: #{
-      \       highlightMatched: 'Search',
-      \     },
-      \     matcher_substring: #{
-      \       highlightMatched: 'Search',
-      \     },
-      \     matcher_ignore_files: #{
-      \       ignoreGlobs: ['test_*.vim'],
-      \       ignorePatterns: [],
-      \     },
-      \   },
-      \   kindOptions: #{
-      \     file: #{
-      \       defaultAction: 'open',
-      \     },
-      \     word: #{
-      \       defaultAction: 'append',
-      \     },
-      \     deol: #{
-      \       defaultAction: 'switch',
-      \     },
-      \     action: #{
-      \       defaultAction: 'do',
-      \     },
-      \     readme_viewer: #{
-      \       defaultAction: 'open',
-      \     },
-      \   },
-      \   kindParams: #{
-      \     action: #{
-      \       quit: v:true,
-      \     },
-      \   },
-      \   actionOptions: #{
-      \     narrow: #{
-      \       quit: v:false,
-      \     },
-      \     tabopen: #{
-      \       quit: v:false,
-      \     },
-      \   },
-      \ })
-call ddu#custom#patch_local('files', #{
-      \   uiParams: #{
-      \     ff: #{
-      \       split: 'floating',
-      \     }
-      \   },
-      \ })
-
-call ddu#custom#action('kind', 'file', 'grep', { args -> GrepAction(args) })
-function! GrepAction(args)
-  call ddu#start(#{
-        \   name: a:args.options.name,
-        \   push: v:true,
-        \   sources: [
-        \     #{
-        \       name: 'rg',
-        \       params: #{
-        \         path: a:args.items[0].action.path,
-        \         input: 'Pattern: '->input(),
-        \       },
-        \     },
-        \   ],
-        \ })
-endfunction
-
-" Define cd action for "ddu-ui-filer"
-call ddu#custom#action('kind', 'file', 'uiCd', { args -> UiCdAction(args) })
-function! UiCdAction(args)
-  const path = a:args.items[0].action.path
-  const directory = path->isdirectory() ? path : path->fnamemodify(':h')
-
-  call ddu#ui#do_action('itemAction',
-        \ #{ name: 'narrow', params: #{ path: directory } })
-endfunction
+call ddu#custom#load_config(expand('$BASE_DIR/ddu.ts'))
 " }}}

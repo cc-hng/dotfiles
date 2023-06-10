@@ -56,8 +56,8 @@ cnoremap <C-y>          <C-r>+
 " <C-g>: Exit.
 cnoremap <C-g>          <C-c>
 " <C-k>: Delete to the end.
-cnoremap <expr><C-k>
-      \ "\<Del>"->repeat(getcmdline()[getcmdpos() - 1:]->strchars())
+cnoremap <C-k> <Cmd>call setcmdline(
+      \ getcmdpos() ==# 1 ? '' : getcmdline()[:getcmdpos() - 2])<CR>
 
 " [Space]: Other useful commands
 " Smart space mapping.
@@ -76,6 +76,17 @@ nnoremap [Space]w
       \ <Cmd>call vimrc#toggle_option('wrap')<CR>
 nnoremap [Space]l
       \ <Cmd>call vimrc#toggle_option('laststatus')<CR>
+nnoremap [Space]c
+      \ <Cmd>call <SID>toggle_conceal()<CR>
+
+function! s:toggle_conceal() abort
+  if &l:conceallevel == 0
+    setlocal conceallevel=3
+  else
+    setlocal conceallevel=0
+  endif
+  setlocal conceallevel?
+endfunction
 
 " Easily edit current buffer
 nnoremap <expr> [Space]e

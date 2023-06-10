@@ -1,18 +1,21 @@
 [[plugins]]
 repo = 'Shougo/ddc.vim'
 depends = ['context_filetype.vim', 'denops.vim', 'pum.vim']
-on_event = ['InsertEnter', 'CursorHold']
+on_event = ['InsertEnter']
 hooks_file = '$BASE_DIR/ddc.vim'
 
 [[plugins]]
 repo = 'Shougo/pum.vim'
 hook_source = '''
-    " \   auto_confirm_time: 1500,
   call pum#set_option(#{
+    \   auto_confirm_time: 3000,
+    \   auto_select: v:false,
     \   horizontal_menu: v:false,
     \   max_width: 80,
-    \   use_setline: v:false,
+    \   offset_cmdcol: 0,
+    \   padding: v:false,
     \   use_complete: v:true,
+    \   use_setline: v:false,
     \ })
   call pum#set_local_option('c', #{
     \   horizontal_menu: v:false,
@@ -49,7 +52,16 @@ on_source = 'ddc.vim'
 depends = 'ddc.vim'
 
 [[plugins]]
+repo = 'Shougo/ddc-source-shell'
+on_source = 'ddc.vim'
+depends = 'ddc.vim'
+
+[[plugins]]
 repo = 'Shougo/ddc-source-copilot'
+on_source = 'ddc.vim'
+
+[[plugins]]
+repo = 'Shougo/ddc-source-codeium'
 on_source = 'ddc.vim'
 
 [[plugins]]
@@ -66,7 +78,7 @@ on_source = 'ddc.vim'
 
 [[plugins]]
 repo = 'Shougo/ddc-source-nvim-lsp'
-on_source = 'nvim-lspconfig'
+on_source = 'ddc.vim'
 
 [[plugins]]
 repo = 'Shougo/ddc-source-cmdline'
@@ -79,10 +91,6 @@ on_source = 'ddc.vim'
 [[plugins]]
 repo = 'Shougo/ddc-source-omni'
 on_source = 'ddc.vim'
-
-[[plugins]]
-repo = 'Shougo/ddc-source-rtags'
-on_ft = ['c', 'cpp']
 
 [[plugins]]
 repo = 'Shougo/ddc-source-nvim-lua'
@@ -128,62 +136,6 @@ hook_source = '''
   call ddc#custom#patch_filetype(
           \   ['vim'],
           \   'sources',
-          \   ['copilot', 'necovim', 'around', 'file']
+          \   ['codeium', 'necovim', 'around', 'file']
           \ )
 '''
-
-[[plugins]]
-repo = 'vim-skk/skkeleton'
-on_map = { ic = '<Plug>(skkeleton-toggle)' }
-depends = ['ddc.vim']
-hook_add = '''
-  imap <C-j> <Plug>(skkeleton-toggle)
-  cmap <C-j> <Plug>(skkeleton-toggle)
-'''
-hook_source = '''
-  "let g:skkeleton#debug = v:true
-  call skkeleton#config(#{
-        \   globalJisyo: has('win32') ?
-        \     '~/.config/SKK-JISYO.L' : '/usr/share/skk/SKK-JISYO.L',
-        \   eggLikeNewline: v:true,
-        \   registerConvertResult: v:true,
-        \   markerHenkan: '',
-        \   markerHenkanSelect: '',
-        \ })
-
-  call skkeleton#register_kanatable('rom', {
-        \   'jj': 'escape',
-        \   '~': ['〜', ''],
-        \   "z\<Space>": ["\u3000", ''],
-        \ })
-
-  autocmd MyAutoCmd User skkeleton-enable-pre call s:skkeleton_pre()
-  function! s:skkeleton_pre() abort
-    " Overwrite sources
-    let s:prev_buffer_config = ddc#custom#get_buffer()
-    call ddc#custom#patch_buffer(#{
-            \   sources: ['around', 'skkeleton'],
-            \   keywordPattern: '[ァ-ヮア-ンー]+',
-            \ })
-  endfunction
-  autocmd MyAutoCmd User skkeleton-disable-pre call s:skkeleton_post()
-  function! s:skkeleton_post() abort
-    " Restore sources
-    call ddc#custom#set_buffer(s:prev_buffer_config)
-  endfunction
-
-  " :mode is needed to redraw screen
-  autocmd MyAutoCmd InsertLeave * mode
-'''
-
-[[plugins]]
-repo = 'Matts966/skk-vconv.vim'
-on_source = ['skkeleton']
-
-#[[plugins]]
-#repo = 'matsui54/denops-popup-preview.vim'
-#on_source = ['ddc.vim']
-#hook_source = '''
-#  autocmd MyAutoCmd User PumCompleteChanged ++once
-#  \ call popup_preview#enable()
-#'''

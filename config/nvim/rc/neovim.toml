@@ -1,17 +1,16 @@
 [[plugins]]
 repo = 'nvim-treesitter/nvim-treesitter'
-depends = 'impatient.nvim'
 if = '!has("win32")'
 on_event = ['BufRead', 'CursorHold']
 hook_post_update = 'TSUpdate'
 lua_source = '''
   require'nvim-treesitter.configs'.setup {
       ensure_installed = 'all',
-      additional_vim_regex_highlighting = false,
+      additional_vim_regex_highlighting = true,
       highlight = {
           enable = true,
           disable = function(lang, buf)
-              if lang == 'vimdoc' or lang == 'diff' then
+              if lang == 'vimdoc' or lang == 'diff' or lang == 'gitcommit' then
                 return true
               end
               local max_filesize = 50 * 1024 -- 50 KB
@@ -26,119 +25,89 @@ lua_source = '''
 '''
 
 [[plugins]]
-repo = 'lewis6991/impatient.nvim'
-# lua_source = '''
-#   require('impatient')
-# '''
+repo = 'neovim/nvim-lspconfig'
+lua_source = '''
+  -- NOTE: Disable lsp watcher. Too slow on linux
+  -- https://github.com/neovim/neovim/issues/23725#issuecomment-1561364086
+  require("vim.lsp._watchfiles")._watchfunc = require("vim._watch").watch
+
+  vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
+    vim.lsp.diagnostic.on_publish_diagnostics, {
+      update_in_insert = false,
+      virtual_text = {
+        format = function(diagnostic)
+          return string.format(
+            '%s (%s: %s)',
+            diagnostic.message,
+            diagnostic.source,
+            diagnostic.code
+          )
+        end
+      },
+  })
+'''
 
 [[plugins]]
-repo = 'nvim-lua/plenary.nvim'
+repo = 'williamboman/mason-lspconfig.nvim'
+depends = 'nvim-lspconfig'
+lua_source = '''
+  -- https://zenn.dev/kawarimidoll/articles/2b57745045b225
+  require('mason-lspconfig').setup_handlers({
+    function(server_name)
+      local nvim_lsp = require('lspconfig')
+      local is_node_repo = vim.fn.findfile('package.json', '.;') ~= ''
+
+      local opts = {}
+
+      if server_name == 'vtsls' then
+        -- Must be node directory
+        if not is_node_repo then
+          return
+        end
+
+        opts.root_dir = nvim_lsp.util.root_pattern('package.json')
+      elseif server_name == 'denols' then
+        -- Must not be node directory
+        if is_node_repo then
+          return
+        end
+
+        opts.init_options = {
+          lint = true,
+          unstable = true,
+          suggest = {
+            imports = {
+              hosts = {
+                ['https://deno.land'] = true,
+                ['https://cdn.nest.land'] = true,
+                ['https://crux.land'] = true
+              }
+            }
+          }
+        }
+      end
+
+      nvim_lsp[server_name].setup(opts)
+    end
+  })
+  require('mason-lspconfig').setup()
+'''
+
+[[plugins]]
+repo = 'williamboman/mason.nvim'
+depends = 'mason-lspconfig.nvim'
+on_event = ['BufRead']
+lua_source = '''
+  require('mason').setup()
+'''
 
 [[plugins]]
 repo = 'MunifTanjim/nui.nvim'
 
 [[plugins]]
-repo = 'neovim/nvim-lspconfig'
-on_ft = ['c', 'cpp', 'cmake', 'dart', 'typescript', 'javascript', 'go', 'python']
-depends = ['impatient.nvim', 'ddc.vim']
-if = 'has("nvim")'
-lua_source = '''
-  local on_attach = function(client, bufnr)
-    local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-    --local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-    -- buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
-    -- Mappings.
-    local opts = { noremap=true, silent=true }
-    buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-    buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-    buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-    buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-    buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-    buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-    buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-    buf_set_keymap('n', '[e', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-    buf_set_keymap('n', ']e', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-    -- Set some keybinds conditional on server capabilities
-    if client.server_capabilities.documentFormattingProvider then
-      buf_set_keymap("n", "==", "<cmd>lua vim.lsp.buf.format { async = true }<CR>", opts)
-    elseif client.server_capabilities.documentRangeFormattingProvider then
-      buf_set_keymap("n", "==", "<cmd>lua vim.lsp.buf.format { async = true }<CR>", opts)
-    end
-  end
-
-  local lsp = require 'lspconfig'
-  lsp.denols.setup{ on_attach = on_attach }
-  lsp.gopls.setup{ on_attach = on_attach }
-  lsp.dartls.setup{ on_attach = on_attach }
-  lsp.pylsp.setup{ on_attach = on_attach }
-  lsp.cmake.setup{ on_attach = on_attach }
-
-  local clangd_cmd = {
-      "clangd", "--clang-tidy",
-      "--completion-style=detailed",
-      "--fallback-style=webkit"}
-  if vim.fn.has('mac') == 1 then
-    clangd_cmd[#clangd_cmd + 1] = "--compile-commands-dir=build"
-  end
-  lsp.clangd.setup {
-    cmd = clangd_cmd,
-    on_attach = function(client, bufnr)
-      local opts = { noremap=true, silent=true }
-      vim.api.nvim_buf_set_keymap(bufnr, 'n', '<F4>', '<cmd>ClangdSwitchSourceHeader<CR>', opts)
-      on_attach(client, bufnr)
-    end,
-  }
-  -- vim.lsp.handlers["textDocument/publishDiagnostics"] = function() end
-  vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
-     vim.lsp.diagnostic.on_publish_diagnostics, {
-     update_in_insert = false,
-     virtual_text = {
-       format = function(diagnostic)
-         return string.format(
-           '%s (%s: %s)',
-           diagnostic.message,
-           diagnostic.source,
-           diagnostic.code
-         )
-       end
-     },
-  })
-  --require'lspconfig'.sumneko.setup{}
-'''
-
-[[plugins]]
-repo = 'lambdalisue/suda.vim'
-on_cmd = ['SudaRead', 'SudaWrite']
-hook_add = '''
-  let g:suda_smart_edit = v:true
-'''
-
-[[plugins]]
-repo = 'windwp/nvim-autopairs'
-on_event = 'VimEnter'
-lua_source = '''
-  require('nvim-autopairs').setup{}
-  -- If you want insert `(` after select function or method item
-  -- local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-  -- local cmp = require('cmp')
-  -- cmp.event:on( 'confirm_done', cmp_autopairs.on_confirm_done({  map_char = { tex = '' } }))
-'''
-
-[[plugins]]
-repo = 'terrortylor/nvim-comment'
-on_lua = 'nvim_comment'
-hook_add = '''
-autocmd MyAutoCmd BufEnter *.c,*.cpp,*.h
-    \ :lua vim.api.nvim_buf_set_option(0, "commentstring", "// %s")
-autocmd MyAutoCmd BufFilePost *.c,*.cpp,*.h
-    \ :lua vim.api.nvim_buf_set_option(0, "commentstring", "// %s")
-lua require "nvim_comment".setup {}
-'''
-
-[[plugins]]
 repo = 'folke/noice.nvim'
-depends = ['nui.nvim']
-on_event = 'VimEnter'
+depends = 'nui.nvim'
+#on_event = 'VimEnter'
 lua_source = '''
   require'noice'.setup {
     cmdline = {
@@ -153,7 +122,6 @@ lua_source = '''
         input = {}, -- Used by input()
         -- lua = false, -- to disable a format, set to `false`
       },
-      view = "cmdline",
     },
     popupmenu = {
       enabled = false,
@@ -193,15 +161,31 @@ lua_source = '''
   })
 '''
 
-#[[plugins]]
-#repo = 'vigoux/notifier.nvim'
-#on_lua = 'notifier'
-#on_event = 'VimEnter'
-#lua_source = '''
-#  require'notifier'.setup {
-#    -- You configuration here
-#  }
-#'''
+[[plugins]]
+repo = 'nvim-lua/plenary.nvim'
+
+[[plugins]]
+repo = 'atusy/tsnode-marker.nvim'
+on_ft = 'markdown'
+lua_source = '''
+  vim.api.nvim_create_autocmd("FileType", {
+    group = vim.api.nvim_create_augroup("tsnode-marker-markdown", {}),
+    pattern = "markdown",
+    callback = function(ctx)
+      require("tsnode-marker").set_automark(ctx.buf, {
+        target = { "code_fence_content" }, -- list of target node types
+        hl_group = "CursorLine", -- highlight group
+      })
+    end,
+  })
+'''
+
+# [[plugins]]
+# repo = 'jmbuhr/otter.nvim'
+# on_source = 'nvim-lspconfig'
+# lua_source = '''
+#   require'otter'.activate({'python'})
+# '''
 
 [[plugins]]
 repo = 'Shougo/neosnippet-snippets'
@@ -315,22 +299,30 @@ lua_source = '''
 '''
 
 [[plugins]]
-repo = 'atusy/tsnode-marker.nvim'
-if = '0'
-on_ft = 'markdown'
-lua_source = '''
-  vim.api.nvim_create_autocmd("FileType", {
-    group = vim.api.nvim_create_augroup("tsnode-marker-markdown", {}),
-    pattern = "markdown",
-    callback = function(ctx)
-      require("tsnode-marker").set_automark(ctx.buf, {
-        target = { "code_fence_content" }, -- list of target node types
-        hl_group = "CursorLine", -- highlight group
-      })
-    end,
-  })
+repo = 'terrortylor/nvim-comment'
+on_lua = 'nvim_comment'
+hook_add = '''
+autocmd MyAutoCmd BufEnter *.c,*.cpp,*.h
+    \ :lua vim.api.nvim_buf_set_option(0, "commentstring", "// %s")
+autocmd MyAutoCmd BufFilePost *.c,*.cpp,*.h
+    \ :lua vim.api.nvim_buf_set_option(0, "commentstring", "// %s")
+lua require "nvim_comment".setup {}
 '''
 
 [[plugins]]
-repo = 'aduros/ai.vim'
-on_cmd = 'AI'
+repo = 'lambdalisue/suda.vim'
+on_cmd = ['SudaRead', 'SudaWrite']
+hook_add = '''
+  let g:suda_smart_edit = v:true
+'''
+
+[[plugins]]
+repo = 'windwp/nvim-autopairs'
+on_event = 'VimEnter'
+lua_source = '''
+  require('nvim-autopairs').setup{}
+  -- If you want insert `(` after select function or method item
+  -- local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+  -- local cmp = require('cmp')
+  -- cmp.event:on( 'confirm_done', cmp_autopairs.on_confirm_done({  map_char = { tex = '' } }))
+'''

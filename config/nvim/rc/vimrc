@@ -14,8 +14,6 @@ let $NVIM_LISTEN_ADDRESS=1
 " Set augroup.
 augroup MyAutoCmd
   autocmd!
-  autocmd BufReadPre *?
-        \ call vimrc#check_syntax()
   autocmd FileType,Syntax,BufNewFile,BufNew,BufRead *?
         \ call vimrc#on_filetype()
 
@@ -41,8 +39,8 @@ try
   set cmdheight=0
 
   " For recording messages
-  autocmd MyAutoCmd RecordingEnter * set cmdheight=1
-  autocmd MyAutoCmd RecordingLeave * set cmdheight=0
+  autocmd MyAutoCmd CmdlineEnter,RecordingEnter * set cmdheight=1
+  autocmd MyAutoCmd CmdlineLeave,RecordingLeave * set cmdheight=0
 catch
   set cmdheight=1
 endtry
@@ -50,20 +48,23 @@ endtry
 " Show title.
 set title titlelen=95
 " Title string.
-let &g:titlestring =
-      \ "%{expand('%:p:~:.')} %<\(%{fnamemodify(getcwd(), ':~')}\)%(%m%r%w%)"
+let &g:titlestring = [
+      \   "%{expand('%:p:~:.')}",
+      \   "%<\(%{fnamemodify(getcwd(), ':~')}\)",
+      \   "%(%y%m%r%)",
+      \ ]->join()
 
 if has('nvim')
   " Use cursor shape feature
   set guicursor=n-v-c:block-Cursor/lCursor-blinkon0,
         \i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
+
   " Use new loader
   lua if vim.loader then vim.loader.enable() end
 endif
 
 " NOTE: Colorscheme must be initialized in the first.
-colorscheme desert
-hi LineNr ctermfg=226 guifg=#888888
+colorscheme candy
 
 " Use English interface.
 language message C
@@ -72,14 +73,7 @@ if filereadable(expand('~/.secret_vimrc'))
   source ~/.secret_vimrc
 endif
 
-let s:base_dir = fnamemodify(expand('<sfile>'), ':h') .. '/'
-
-" Lazy load plugins
-if 0
-  call timer_start(1, { _ -> execute("source `=s:base_dir .. 'dein.vim'`") })
-else
-  source `=s:base_dir .. 'dein.vim'`
-endif
+execute 'source' $"{fnamemodify(expand('<sfile>'), ':h')}/dein.vim"
 
 "---------------------------------------------------------------------------
 

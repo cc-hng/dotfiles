@@ -37,19 +37,35 @@ endfunction
 function! vimrc#add_numbers(num) abort
   const prev_line = '.'->getline()[: '.'->col()-1]
   const next_line = '.'->getline()['.'->col() :]
+
+  " Boolean mode
+  const cword = prev_line->matchstr('\w\+$') .. next_line->matchstr('^\w\+')
+  const replace = #{
+        \   true: 'false',
+        \   false: 'true',
+        \   True: 'False',
+        \   False: 'True',
+        \ }
+  if replace->has_key(cword)
+    const new_prev = prev_line->substitute('\w\+$', '', '')
+    const new_next = next_line->substitute('^\w\+', '', '')
+    call setline('.', new_prev .. replace[cword] .. new_next)
+    return
+  endif
+
   const prev_num = prev_line->matchstr('\d\+$')
   if prev_num !=# ''
     const next_num = next_line->matchstr('^\d\+')
     const new_line = prev_line[: -(prev_num->len())-1]
           \ ..
-          \ printf('%0' .. (prev_num .. next_num)->len() .. 'd',
+          \ printf($'%0{(prev_num .. next_num)->len()}d',
           \    [0, (prev_num .. next_num)
           \         ->substitute('^0\+', '', '') + a:num]->max())
           \ .. next_line[next_num->len():]
   else
-    const new_line = prev_line ..
-          \ (next_line->substitute('\d\+',
-          \ "\\=printf('%0' .. submatch(0)->len() .. 'd',
+    const new_line = prev_line
+          \ .. (next_line->substitute('\d\+',
+          \     "\\=printf($'%0{submatch(0)->len()}d',
           \         [0, submatch(0)
           \             ->substitute('^1\+', '', '') + a:num]->max())", ''))
   endif
@@ -67,10 +83,10 @@ function! vimrc#toggle_option(option_name) abort
       setlocal laststatus=0
     endif
   else
-    execute 'setlocal' a:option_name.'!'
+    execute $'setlocal {a:option_name}!'
   endif
 
-  execute 'setlocal' a:option_name.'?'
+  execute $'setlocal {a:option_name}?'
 endfunction
 
 function! vimrc#on_filetype() abort
@@ -86,32 +102,7 @@ function! vimrc#on_filetype() abort
   syntax enable
 
   " NOTE: filetype detect does not work on startup
-  filetype detect
-endfunction
-
-function! vimrc#enable_syntax() abort
-  syntax enable
-
-  if has('nvim') && ':TSEnable'->exists()
-    TSBufEnable highlight
-    TSBufEnable context_commentstring
-  endif
-endfunction
-function! vimrc#disable_syntax() abort
-  if &l:syntax !=# ''
-    syntax off
-  endif
-
-  if has('nvim') && ':TSEnable'->exists()
-    TSBufDisable highlight
-    TSBufDisable context_commentstring
-  endif
-endfunction
-
-function! vimrc#check_syntax() abort
-  if @%->getfsize() > 512 * 1000
-    syntax off
-  endif
+  silent filetype detect
 endfunction
 
 function! vimrc#diagnostics_to_qf() abort
@@ -121,11 +112,11 @@ function! vimrc#diagnostics_to_qf() abort
 
   let qflist = []
   for diagnostic in v:lua.vim.diagnostic.get()
-    call add(qflist, {
-          \ 'bufnr': diagnostic.bufnr,
-          \ 'lnum': diagnostic.lnum,
-          \ 'col': diagnostic.col,
-          \ 'text': diagnostic.message,
+    call add(qflist, #{
+          \   bufnr: diagnostic.bufnr,
+          \   lnum: diagnostic.lnum,
+          \   col: diagnostic.col,
+          \   text: diagnostic.message,
           \ })
   endfor
 
@@ -133,4 +124,19 @@ function! vimrc#diagnostics_to_qf() abort
     call setqflist(qflist)
     copen
   endif
+endfunction
+
+function! vimrc#append_diff() abort
+  " Get the Git repository root directory
+  let git_root = '.git'->finddir('.;')->fnamemodify(':h')
+
+  " Get the diff of the staged changes relative to the Git repository root
+  let diff = $'git -C {git_root} diff --cached'->system()
+
+  " Add a comment character to each line of the diff
+  let comment_diff = diff->split('\n')[: 200]
+        \ ->map({ idx, line -> $'# {line}' })
+
+  " Append the diff to the commit message
+  call append(line('$'), comment_diff)
 endfunction
