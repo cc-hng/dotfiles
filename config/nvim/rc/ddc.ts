@@ -146,7 +146,7 @@ export class Config extends BaseConfig {
       ]
     ) {
       args.contextBuilder.patchFiletype(filetype, {
-        sources: ["around", "codeium", "mocword"],
+        sources: ["around", "codeium"],
       });
     }
 

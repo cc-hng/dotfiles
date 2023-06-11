@@ -12,7 +12,7 @@ function! CommandlinePre(mode) abort
     call ddc#custom#patch_buffer('keywordPattern', '[0-9a-zA-Z_:#-]*')
   elseif a:mode ==# 'dda'
     " For AI completion
-    call ddc#custom#patch_buffer('cmdlineSources', ['around', 'mocword'])
+    call ddc#custom#patch_buffer('cmdlineSources', ['around'])
   endif
 
   autocmd MyAutoCmd User DDCCmdlineLeave ++once call CommandlinePost()
