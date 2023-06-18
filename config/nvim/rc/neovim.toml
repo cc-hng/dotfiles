@@ -10,7 +10,8 @@ lua_source = '''
       highlight = {
           enable = true,
           disable = function(lang, buf)
-              if lang == 'vimdoc' or lang == 'diff' or lang == 'gitcommit' then
+              if (lang == 'vimdoc' or lang == 'diff'
+                  or lang == 'gitcommit' or lang == 'swift') then
                 return true
               end
               local max_filesize = 50 * 1024 -- 50 KB
@@ -22,6 +23,92 @@ lua_source = '''
           end,
       },
   }
+'''
+hook_source = '''
+  " Custom colors
+  highlight CandyBlue         gui=NONE guibg=#2c2c2c guifg=#1e95fd
+  highlight CandyCranberry    gui=NONE guibg=#2c2c2c guifg=#4ae2e2
+  highlight CandyEmerald      gui=NONE guibg=#2c2c2c guifg=#44ff44
+  highlight CandyGreen        gui=NONE guibg=#2c2c2c guifg=#66ff66
+  highlight CandyLime         gui=NONE guibg=#2c2c2c guifg=#4ae2e2
+  highlight CandyOrange       gui=NONE guibg=#2c2c2c guifg=#ffb30a
+  highlight CandyRed          gui=NONE guibg=#2c2c2c guifg=#ff6666
+  highlight CandySky          gui=NONE guibg=#2c2c2c guifg=#6699ff
+  highlight CandyViolet       gui=NONE guibg=#2c2c2c guifg=#ff13ff
+  highlight CandyWhite        gui=NONE guibg=#2c2c2c guifg=#cccccc
+  highlight CandyYellow       gui=NONE guibg=#2c2c2c guifg=#ffd30a
+  highlight CandyCoral        gui=NONE guibg=#2c2c2c guifg=#f820ff
+  highlight CandyTurquoise    gui=NONE guibg=#2c2c2c guifg=#1bc8c8
+  highlight CandyCrimson      gui=NONE guibg=#2c2c2c guifg=#ff4444
+
+  " neovim treesitter colors
+  highlight! link @attribute        CandyViolet
+  highlight! link @boolean          Boolean
+  highlight! link @character        Character
+  highlight! link @character.special SpecialChar
+  highlight! link @comment          Comment
+  highlight! link @conditional      CandyCoral
+  highlight! link @constant         Constant
+  highlight! link @constant.builtin CandyGreen
+  highlight! link @constant.macro   CandyViolet
+  highlight! link @constructor      CandyEmerald
+  highlight! link @debug            Character
+  highlight! link @error            Error
+  highlight! link @exception        Exception
+  highlight! link @field            CandyBlue
+  highlight! link @float            Float
+  highlight! link @function         CandyCranberry
+  highlight! link @function.builtin CandySky
+  highlight! link @function.call    CandySky
+  highlight! link @function.macro   CandySky
+  highlight! link @include          CandyCranberry
+  highlight! link @keyword          CandyEmerald
+  highlight! link @keyword.function Keyword
+  highlight! link @keyword.operator CandyViolet
+  highlight! link @keyword.return   CandyRed
+  highlight! link @label            Label
+  highlight! link @method           CandyTurquoise
+  highlight! link @method.call      CandyTurquoise
+  highlight! link @namespace        CandyBlue
+  highlight! link @none             Normal
+  highlight! link @number           Number
+  highlight! link @operator         Operator
+  highlight! link @parameter        CandyWhite
+  highlight! link @preproc          PreProc
+  highlight! link @property         Identifier
+  highlight! link @punctuation.special Special
+  highlight! link @repeat           Repeat
+  highlight! link @storageclass     CandyBlue
+  highlight! link @string           String
+  highlight! link @string.escape    SpecialChar
+  highlight! link @string.regex     String
+  highlight! link @symbol           Identifier
+  highlight! link @tag              CandyBlue
+  highlight! link @tag.attribute    CandyBlue
+  highlight! link @tag.delimiter    CandyLime
+  highlight! link @text             None
+  highlight! link @text.danger      ErrorMsg
+  highlight! link @text.emphasis    Italic
+  highlight! link @text.environment CandyGreen
+  highlight! link @text.environment.name CandyLime
+  highlight! link @text.literal     CandyYellow
+  highlight! link @text.math        CandyBlue
+  highlight! link @text.note        Todo
+  highlight! link @text.reference   CandySky
+  highlight! link @text.strike      Underlined
+  highlight! link @text.strong      Bold
+  highlight! link @text.tile        Title
+  highlight! link @text.underline   Underlined
+  highlight! link @text.uri         Underlined
+  highlight! link @text.warning     WarningMsg
+  highlight! link @todo             Todo
+  highlight! link @type             Type
+  highlight! link @type.builtin     Type
+  highlight! link @type.definition  Type
+  highlight! link @type.qualifier   Type
+  highlight! link @variable         Identifier
+  highlight! link @variable.builtin CandyLime
+  highlight! link @variable.global  CandyViolet
 '''
 
 [[plugins]]

@@ -79,7 +79,7 @@ nnoremap [Space]l
 nnoremap [Space]c
       \ <Cmd>call <SID>toggle_conceal()<CR>
 
-function! s:toggle_conceal() abort
+function s:toggle_conceal() abort
   if &l:conceallevel == 0
     setlocal conceallevel=3
   else
@@ -172,10 +172,8 @@ onoremap ir  i]
 xnoremap ir  i]
 
 " Improved increment.
-nmap <C-a> <SID>(increment)
-nmap <C-x> <SID>(decrement)
-nnoremap <SID>(increment)    <Cmd>AddNumbers 1<CR>
-nnoremap <SID>(decrement)    <Cmd>AddNumbers -1<CR>
+nnoremap <C-a> <Cmd>AddNumbers 1<CR>
+nnoremap <C-x> <Cmd>AddNumbers -1<CR>
 command! -range -nargs=1 AddNumbers
       \ call vimrc#add_numbers((<line2>-<line1>+1) * eval(<args>))
 
@@ -183,7 +181,7 @@ nnoremap #    <C-^>
 
 " NOTE: Does not overwrite <ESC> behavior
 if has('nvim')
-  tnoremap jj         <C-\><C-n>
+  tnoremap jj          <C-\><C-n>
 else
   tnoremap <ESC><ESC>  <C-l>N
   tnoremap jj          <C-l>N

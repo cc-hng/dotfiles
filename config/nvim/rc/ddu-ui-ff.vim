@@ -82,6 +82,15 @@ nnoremap <buffer> <C-j>
       \ <Cmd>call ddu#ui#do_action('cursorNext')<CR>
 nnoremap <buffer> <C-k>
       \ <Cmd>call ddu#ui#do_action('cursorPrevious')<CR>
+
+nnoremap <buffer> >
+      \ <Cmd>call ddu#ui#do_action('updateOptions', #{
+      \   uiParams: #{
+      \     ff: #{
+      \       winWidth: 80,
+      \     },
+      \   },
+      \ })<CR>
 " }}}
 
 " ddu-ff-filter {{{
@@ -90,7 +99,7 @@ if has('nvim')
         \ <Esc><Cmd>call ddu#ui#do_action('closeFilterWindow')<CR>
 else
   inoremap <buffer> <CR>
-        \ <Cmd>call ddu#ui#do_action('itemAction')<CR>
+        \ <Esc><Cmd>call ddu#ui#do_action('itemAction')<CR>
 endif
 inoremap <buffer> <C-j>
       \ <Cmd>call ddu#ui#do_action('cursorNext')<CR>
