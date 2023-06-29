@@ -2,8 +2,7 @@
 # refer: https://clang.llvm.org/docs/ClangFormatStyleOptions.html
 
 ---
-BasedOnStyle: Webkit
----
+BasedOnStyle: LLVM
 Language: Cpp
 Standard: c++20
 ColumnLimit: 90
@@ -56,6 +55,7 @@ AllowShortLoopsOnASingleLine: false
 #  -------------------------- 换行 --------------------------
 # 函数声明返回类型后是否换行(None 自动，All全部，TopLevel...)
 AlwaysBreakAfterReturnType: None
+AlwaysBreakAfterDefinitionReturnType: None
 # 总是在多行string字面量前换行
 AlwaysBreakBeforeMultilineStrings: false
 # 总是在template声明后换行
@@ -146,3 +146,13 @@ SpacesInSquareBrackets: false
 
 # ------------------------------
 EmptyLineBeforeAccessModifier: Always
+
+# Penalties
+# This decides what order things should be done if a line is too long
+PenaltyBreakAssignment: 10
+PenaltyBreakBeforeFirstCallParameter: 30
+PenaltyBreakComment: 10
+PenaltyBreakFirstLessLess: 0
+PenaltyBreakString: 10
+PenaltyExcessCharacter: 100
+PenaltyReturnTypeOnItsOwnLine: 10

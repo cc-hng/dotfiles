@@ -1,6 +1,10 @@
 CompileFlags:                     # Tweak the parse settings
   Add: [-Wall]             # treat all files as C++, enable more warnings
   Remove:
+    - -W*
     - -fcoroutines
+    - -fno-reorder-functions
+    - -mfp16-format=ieee
+    - -mpreferred-stack-boundary=2
 #   Remove: [-W*, -std=gnu99]                     # strip all other warning-related flags
 #   Compiler: clang++               # Change argv[0] of compile flags to `clang++`
