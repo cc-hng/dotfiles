@@ -1,10 +1,10 @@
-import { BaseConfig } from "https://deno.land/x/ddc_vim@v3.5.1/types.ts";
-import { fn } from "https://deno.land/x/ddc_vim@v3.5.1/deps.ts";
-import { ConfigArguments } from "https://deno.land/x/ddc_vim@v3.5.1/base/config.ts";
+import { BaseConfig } from "https://deno.land/x/ddc_vim@v3.7.2/types.ts";
+import { fn } from "https://deno.land/x/ddc_vim@v3.7.2/deps.ts";
+import { ConfigArguments } from "https://deno.land/x/ddc_vim@v3.7.2/base/config.ts";
 
 export class Config extends BaseConfig {
   override async config(args: ConfigArguments): Promise<void> {
-    const hasNvim = await fn.has(args.denops, "nvim");
+    const hasNvim = args.denops.meta.host === "nvim";
     const hasWindows = await fn.has(args.denops, "win32");
 
     args.contextBuilder.patchGlobal({
@@ -149,31 +149,47 @@ export class Config extends BaseConfig {
       ]
     ) {
       args.contextBuilder.patchFiletype(filetype, {
-        sources: ["around", "codeium"],
+        sources: ["around", "codeium", "mocword"],
       });
     }
 
     for (const filetype of ["html", "css"]) {
       args.contextBuilder.patchFiletype(filetype, {
-        keywordPattern: "[0-9a-zA-Z_:#-]*",
+        sourceOptions: {
+          _: {
+            keywordPattern: "[0-9a-zA-Z_:#-]*",
+          },
+        },
       });
     }
 
     for (const filetype of ["zsh", "sh", "bash"]) {
       args.contextBuilder.patchFiletype(filetype, {
-        keywordPattern: "[0-9a-zA-Z_./#:-]*",
+        sourceOptions: {
+          _: {
+            keywordPattern: "[0-9a-zA-Z_./#:-]*",
+          },
+        },
         sources: [hasWindows ? "shell" : "zsh", "around"],
       });
     }
     args.contextBuilder.patchFiletype("deol", {
       specialBufferCompletion: true,
-      keywordPattern: "[0-9a-zA-Z_./#:-]*",
       sources: [hasWindows ? "shell" : "zsh", "shell-history", "around"],
+      sourceOptions: {
+        _: {
+          keywordPattern: "[0-9a-zA-Z_./#:-]*",
+        },
+      },
     });
 
     args.contextBuilder.patchFiletype("ddu-ff-filter", {
-      keywordPattern: "[0-9a-zA-Z_:#-]*",
       sources: ["line", "buffer"],
+      sourceOptions: {
+        _: {
+          keywordPattern: "[0-9a-zA-Z_:#-]*",
+        },
+      },
       specialBufferCompletion: true,
     });
 

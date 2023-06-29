@@ -105,7 +105,7 @@ function vimrc#on_filetype() abort
   silent filetype detect
 endfunction
 
-function vimrc#diagnostics_to_qf() abort
+function vimrc#diagnostics_to_location_list() abort
   if !has('nvim')
     return
   endif
@@ -114,15 +114,17 @@ function vimrc#diagnostics_to_qf() abort
   for diagnostic in v:lua.vim.diagnostic.get()
     call add(qflist, #{
           \   bufnr: diagnostic.bufnr,
-          \   lnum: diagnostic.lnum,
-          \   col: diagnostic.col,
+          \   lnum: diagnostic.lnum + 1,
+          \   col: diagnostic.col + 1,
           \   text: diagnostic.message,
           \ })
   endfor
 
-  if !(qflist->empty())
-    call setqflist(qflist)
-    copen
+  if qflist->empty()
+    lclose
+  else
+    call setloclist(win_getid(), qflist)
+    lopen
   endif
 endfunction
 

@@ -2,10 +2,12 @@ import {
   ActionArguments,
   ActionFlags,
   BaseConfig,
-} from "https://deno.land/x/ddu_vim@v3.0.2/types.ts";
-import { Denops, fn } from "https://deno.land/x/ddu_vim@v3.0.2/deps.ts";
-import { ConfigArguments } from "https://deno.land/x/ddu_vim@v3.0.2/base/config.ts";
-import { ActionData } from "https://deno.land/x/ddu_kind_file@v0.5.0/file.ts";
+} from "https://deno.land/x/ddu_vim@v3.2.7/types.ts";
+import { Denops, fn } from "https://deno.land/x/ddu_vim@v3.2.7/deps.ts";
+import { ConfigArguments } from "https://deno.land/x/ddu_vim@v3.2.7/base/config.ts";
+import { ActionData } from "https://deno.land/x/ddu_kind_file@v0.5.2/file.ts";
+import { Params as FfParams } from "https://deno.land/x/ddu_ui_ff@v1.0.2/ff.ts";
+import { Params as FilerParams } from "https://deno.land/x/ddu_ui_filer@v1.0.2/filer.ts";
 
 type Params = Record<string, unknown>;
 
@@ -26,6 +28,7 @@ export class Config extends BaseConfig {
           filterSplitDirection: "floating",
           floatingBorder: "single",
           highlights: {
+            filterText: "Statement",
             floating: "Normal",
             floatingBorder: "Special",
           },
@@ -40,13 +43,16 @@ export class Config extends BaseConfig {
           previewSplit: "no",
           updateTime: 0,
           winWidth: 100,
-        },
+        } as Partial<FfParams>,
         filer: {
           sort: "filename",
           sortTreesFirst: true,
           split: "no",
           toggle: true,
-        },
+          split: "vertical",
+          splitDirection: "topleft",
+          winWidth: 30,
+        } as Partial<FilerParams>,
       },
       sourceOptions: {
         _: {
@@ -59,17 +65,20 @@ export class Config extends BaseConfig {
             "matcher_relative",
             "matcher_ignore_current_buffer",
           ],
+          converters: ['converter_hl_dir'],
         },
         file_external: {
           matchers: [
             "matcher_substring",
           ],
+          converters: ['converter_hl_dir'],
         },
         file_rec: {
           matchers: [
             "matcher_substring",
             "matcher_hidden",
           ],
+          converters: ['converter_hl_dir'],
         },
         file: {
           matchers: [
@@ -77,6 +86,7 @@ export class Config extends BaseConfig {
             "matcher_hidden",
           ],
           sorters: ["sorter_alpha"],
+          converters: ['converter_hl_dir'],
         },
         dein: {
           defaultAction: "cd",
@@ -135,6 +145,9 @@ export class Config extends BaseConfig {
         matcher_ignore_files: {
           ignoreGlobs: ["test_*.vim"],
           ignorePatterns: [],
+        },
+        converter_hl_dir: {
+          hlGroup: ['Directory', 'Keyword'],
         },
       },
       kindOptions: {

@@ -60,7 +60,7 @@ hook_add = '''
 " Completion with prompt
 command! -nargs=* -range -bar
 \ Dda call RangeCompletion(<line1>, <line2>, <range>, <q-args>)
-function RangeCompletion(line1, line2, range, prompt)
+function! RangeCompletion(line1, line2, range, prompt)
   const offset = 20
 
   if a:range > 0
@@ -154,22 +154,31 @@ hook_source = '''
         \ })
 
   autocmd MyAutoCmd User skkeleton-enable-pre call s:skkeleton_pre()
-  function s:skkeleton_pre() abort
+  function! s:skkeleton_pre() abort
     " Overwrite sources
     let s:prev_buffer_config = ddc#custom#get_buffer()
     call ddc#custom#patch_buffer(#{
             \   sources: ['around', 'skkeleton'],
-            \   keywordPattern: '[ァ-ヮア-ンー]+',
+            \   sourceOptions: #{
+            \     _: #{
+            \       keywordPattern: '[ァ-ヮア-ンー]+',
+            \     },
+            \   },
             \ })
   endfunction
   autocmd MyAutoCmd User skkeleton-disable-pre call s:skkeleton_post()
-  function s:skkeleton_post() abort
-    " Restore sources
-    call ddc#custom#set_buffer(s:prev_buffer_config)
+  function! s:skkeleton_post() abort
+    if 's:prev_buffer_config'->exists()
+      " Restore sources
+      call ddc#custom#set_buffer(s:prev_buffer_config)
+    endif
   endfunction
 
   " :mode is needed to redraw screen
   autocmd MyAutoCmd InsertLeave * mode
+  augroup skkeleton
+  autocmd!
+  augroup END
 '''
 
 [[plugins]]

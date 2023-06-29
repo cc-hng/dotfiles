@@ -109,16 +109,19 @@ cnoremap <C-q> <Cmd>call ddu#start(#{
       \ })<CR><Cmd>call setcmdline('')<CR><CR>
 
 " Initialize ddu.vim lazily.
-call timer_start(10, { _ ->
-      \   ddu#start(#{
-      \     ui: 'ff',
-      \     uiParams: #{
-      \       ff: #{
-      \         ignoreEmpty: v:true,
-      \       },
-      \     },
-      \   })
-      \ })
+if !('g:shougo_s_github_load_state'->exists())
+  call timer_start(10, { _ ->
+        \   ddu#start(#{
+        \     ui: 'ff',
+        \     uiParams: #{
+        \       ff: #{
+        \         ignoreEmpty: v:true,
+        \       },
+        \     },
+        \   })
+        \ })
+endif
+
 " }}}
 
 " hook_source = {{{
