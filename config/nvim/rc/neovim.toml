@@ -404,3 +404,22 @@ lua_source = '''
   -- local cmp = require('cmp')
   -- cmp.event:on( 'confirm_done', cmp_autopairs.on_confirm_done({  map_char = { tex = '' } }))
 '''
+
+[[plugins]]
+repo = 'akinsho/nvim-bufferline.lua'
+on_event = 'VimEnter'
+hook_add = '''
+  nnoremap <silent>gt <cmd>BufferLineCycleNext<CR>
+  nnoremap <silent>gT <cmd>BufferLineCyclePrev<CR>
+  nnoremap <silent>gb <cmd>BufferLinePick<CR>
+'''
+lua_source = '''
+require "bufferline".setup {
+  options = {
+    modified_icon = '✥',
+    buffer_close_icon = '',
+    always_show_bufferline = false,
+    offsets = {{filetype = "NvimTree", text = "File Explorer", text_align = "left"}},
+  }
+}
+'''
