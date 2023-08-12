@@ -1,6 +1,0 @@
-" NOTE: Skip initialization for vim-tiny or vim-small.
-" profile start profile.txt
-" profile file ~/.vim/rc/*
-if 1
-  execute 'source' $"{'<sfile>'->expand()->fnamemodify(':h')}/rc/vimrc"
-endif

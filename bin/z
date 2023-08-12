@@ -1,0 +1,37 @@
+#!/usr/bin/env lua
+
+local argparse = require("argparse")
+local parser = argparse("z", "A remote machine connecter")
+
+parser:argument("input", ""):args("?")
+parser:flag("-l --list", "List all remote machine", false)
+parser:flag("-m --mosh", "Use mosh instead of ssh", false)
+
+local args = parser:parse()
+
+local secret_home = os.getenv("MY_SECRET_HOME")
+assert(secret_home ~= "")
+package.path = package.path .. ";" .. secret_home .. "/lua/?.lua" .. ";" .. secret_home .. "/lua/?/init.lua"
+
+local machines = require("machines")
+
+if args.list or not args.input or tonumber(args.input) > #machines then
+  print("All my machines:")
+  for i, m in ipairs(machines) do
+    print(string.format("  %d. %s", i, m.remark))
+  end
+  return
+end
+
+local m = machines[tonumber(args.input)]
+local cmd
+if args.mosh then
+  cmd = string.format([[mosh -ssh="ssh -p %d" %s@%s]], m.port, m.user, m.host)
+else
+  cmd = string.format([[ssh -p %d %s@%s]], m.port, m.user, m.host)
+end
+if m.password then
+  cmd = string.format("sshpass -p %s %s", m.password, cmd)
+end
+
+os.execute(cmd)
