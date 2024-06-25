@@ -15,5 +15,5 @@ brew install ruby
 # stow
 is-executable stow || brew install stow
 
-brew bundle --file=${DF_CONF_BREWFILE}
-brew bundle --file=${DF_CONF_CASKFILE} || true
+brew bundle --file=${DF_HOME}/conf/macos/Brewfile
+brew bundle --file=${DF_HOME}/conf/macos/Caskfile || true

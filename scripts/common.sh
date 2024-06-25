@@ -1,5 +1,13 @@
 #!/bin/bash
 
+set -e
+
+# dotfiles 根目录
+cd ..
+export DF_HOME=$(pwd -P)
+export MY_LOCAL_HOME="${HOME}/.local"
+
+# log function
 info () {
   printf "\r  [ \033[00;34m..\033[0m ] $1\n"
 }
@@ -17,4 +25,5 @@ fail () {
   exit
 }
 
-
+# path
+export PATH="${DF_HOME}/bin:$PATH"

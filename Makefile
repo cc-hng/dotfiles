@@ -1,29 +1,29 @@
 SHELL = /bin/bash
 DOTFILES_DIR := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
-OS := $(shell bin/is-supported bin/is-macos macos linux)
 PATH := $(DOTFILES_DIR)/bin:$(PATH)
+OS := $(shell is-supported is-macos macos $(shell is-supported is-win32 win32 linux))
 export XDG_CONFIG_HOME := $(HOME)/.config
 export STOW_DIR := $(DOTFILES_DIR)
 
 .PHONY: all
 
-all: $(OS)
+all: debug $(OS)
+
+win32: packages-win32 link
 
 macos: packages-macos link
 
 linux: packages-linux link
 
+packages-win32:
+	$(DOTFILES_DIR)/scripts/os/install_msys.sh
+
 packages-macos:
-	$(DOTFILES_DIR)/script/os/install_brew.sh
-	$(DOTFILES_DIR)/script/install_common.sh
-	$(DOTFILES_DIR)/script/install_zsh_plugin.sh
+	$(DOTFILES_DIR)/scripts/os/install_brew.sh
 
 packages-linux:
-	if is-executable apt; then $(DOTFILES_DIR)/script/os/install_apt.sh; fi
-	if is-executable paru; then $(DOTFILES_DIR)/script/os/install_paru.sh; fi
-	is-executable stow || exit 1
-	$(DOTFILES_DIR)/script/install_common.sh
-	$(DOTFILES_DIR)/script/install_zsh_plugin.sh
+	is-executable apt && $(DOTFILES_DIR)/script/os/install_apt.sh || true
+	is-executable paru && $(DOTFILES_DIR)/script/os/install_paru.sh || true
 
 link:
 	is-executable stow || exit 1
@@ -45,6 +45,11 @@ unlink:
 		mv -v $(HOME)/$$FILE.bak $(HOME)/$${FILE%%.bak}; fi; done
 	for FILE in $$(\ls -A config); do if [ -f $(XDG_CONFIG_HOME)/$$FILE.bak ]; then \
 		mv -v $(XDG_CONFIG_HOME)/$$FILE.bak $(XDG_CONFIG_HOME)/$${FILE%%.bak}; fi; done
+
+debug:
+	@echo "os: $(OS)"
+	@echo "shell: $(SHELL)"
+	@echo "dotfiles(root): $(DOTFILES_DIR)"
 
 bash: BASH=/usr/local/bin/bash
 bash: SHELLS=/etc/shells
