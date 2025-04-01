@@ -36,8 +36,8 @@ fish_add_path $HOME/.local/bin/vcpkg \
 # set pure_color_red \e\[31m
 # set pure_color_yellow \e\[33m
 #
-#set fish_color_autosuggestion 1bc8c8 yellow
-# set fish_color_command f820ff purple
+set fish_color_autosuggestion cyan
+set fish_color_command blue
 # set fish_color_comment cc6666 red
 # set fish_color_cwd ff13ff yellow
 # set fish_color_cwd_root ff6666 red
@@ -94,3 +94,9 @@ set -l MY_SECRET_HOME $HOME/.local/secret
 [ -f $MY_SECRET_HOME/config.fish ] && source $MY_SECRET_HOME/config.fish
 [ -f /usr/local/share/autojump/autojump.fish ] && source /usr/local/share/autojump/autojump.fish
 [ -f /usr/share/autojump/autojump.fish ] && source /usr/share/autojump/autojump.fish
+
+alias ee=emacs
+
+# bun
+set --export BUN_INSTALL "$HOME/.bun"
+set --export PATH $BUN_INSTALL/bin $PATH

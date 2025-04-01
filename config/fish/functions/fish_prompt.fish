@@ -18,7 +18,7 @@ function fish_prompt
     set_color normal
 
     # And now define the right prompt so that it's brought along
-    function fish_right_prompt
+    function fish_right_prompt10
         set -l cmd_status $status
         if test $cmd_status -ne 0
             echo -n (set_color red)"✘ $cmd_status"

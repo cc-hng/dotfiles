@@ -4,7 +4,13 @@ CompileFlags:                     # Tweak the parse settings
     - -W*
     - -fcoroutines
     - -fno-reorder-functions
+    - -fno-printf-return-value
     - -mfp16-format=ieee
     - -mpreferred-stack-boundary=2
+    - -mlongcalls
 #   Remove: [-W*, -std=gnu99]                     # strip all other warning-related flags
 #   Compiler: clang++               # Change argv[0] of compile flags to `clang++`
+# InlayHints:
+#   Enabled: No
+Diagnostics:
+  UnusedIncludes: None

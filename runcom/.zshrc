@@ -36,7 +36,7 @@ export PATH="$HOME/.local/bin/vcpkg:$PATH"
 export PATH="$HOME/.local/bin:$HOME/.dotfiles/bin:/usr/local/bin:/sbin:$GOPATH/bin:$HOME/.cargo/bin:$HOME/.deno/bin:$PATH"
 export PATH="$HOME/.local/third-party/linux/release/bin:$PATH"
 export PATH="/opt/go/bin:$HOME/.go/bin:$PATH"
-export PATH="/snap/bin:$PATH"
+export PATH="$HOME/.bun/bin:/snap/bin:$PATH"
 export MANPAGER='nvim --cmd "set laststatus=0" --clean +Man\!'
 export CPM_SOURCE_CACHE="$HOME/.cache/CPM"
 export VCPKG_FORCE_SYSTEM_BINARIES=1
@@ -71,6 +71,11 @@ export LESS='--tabs=4 --no-init --LONG-PROMPT --ignore-case --quit-if-one-screen
 #limit -s
 #limit coredumpsize  0
 
+
+short_path() {
+  local path="$1"
+  echo "$path" | /usr/bin/sed -e "s|$HOME|~|" | /usr/bin/sed -re "s|(\.?[^/])[^/]+/|\1/|g"
+}
 
 #####################################################################
 # completions
@@ -169,12 +174,12 @@ elif [ -f /.dockerenv ]; then
   PROMPT="%B%{[31m%}%/ $%b "
 elif [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] ; then
   PROMPT="%{$fg[white]%}[${HOST%%.*} "
-  PROMPT+='%{$fg[green]%}%1d%{$fg[white]%}] '
-  PROMPT+='%(?.%(!.%F{white}%F{yellow}%F{red}.%F{green})%f.%F{red}%f)%{[$[32+$RANDOM % 6]m%}%B%#'"%b%{%} "
-  #RPROMPT='%{[m%}$(gitprompt)'
+  PROMPT+='%{$fg[green]%}$(short_path "$PWD")%{$fg[white]%}] '
+  PROMPT+='%(?.%(!.%F{white}%F{yellow}%F{red}.%F{green})%f.%F{red}%f)%{[$[32+$RANDOM % 5]m%}%B$'"%b%{%} "
+  RPROMPT='%{[m%}$(gitprompt)'
 else;
-  PROMPT='%{$fg[white]%}[%{$fg[green]%}%35<..<%1d%{$fg[white]%}] '
-  PROMPT+='%{[$[32+$RANDOM % 6]m%}%B%#'"%b%{%} "
+  PROMPT='%{$fg[green]%}%35<..<$(short_path "$PWD") '
+  PROMPT+='%{[$[32+$RANDOM % 5]m%}%B$'"%b%{%} "
   RPROMPT='%{[m%}$(gitprompt)'
 fi
 
@@ -290,7 +295,6 @@ zmodload zsh/mathfunc
 ######################################################################
 
 alias rm='rm -i'
-alias vim='nvim -u NONE'
 alias k=kubectl
 alias d=docker
 alias dc=docker-compose
@@ -309,6 +313,7 @@ alias od='od -Ax -tx1z'
 alias hexdump='hexdump -C'
 
 alias vim="TERM=xterm-256color nvim --listen $HOME/.cache/nvim/server.pipe"
+alias vi=vim
 #alias goneovim='~/Downloads/goneovim/goneovim &>/dev/null &'
 #alias gn=goneovim
 #alias nvui='NVIM_GUI=1 nvui &'
@@ -316,7 +321,7 @@ alias vim="TERM=xterm-256color nvim --listen $HOME/.cache/nvim/server.pipe"
 if ! command -v fd > /dev/null; then
   alias fd=fdfind
 fi
-alias cmaked="cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug -DUSE_CCACHE=ON -DUSE_SANITIZER='Address;Undefined'"
+alias cdebug="cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug -DUSE_CCACHE=ON -DUSE_SANITIZER='Address;Undefined'"
 alias cbuild="cmake --build build -j"
 alias cb=cbuild
 alias ct="cmake --build build -j --target"
@@ -392,10 +397,6 @@ _contains () {  # Check if space-separated list $1 contains line $2
   echo "$1" | tr ' ' '\n' | grep -F -x -q "$2"
 }
 
-vi() {
-  nvim $@
-}
-
 ee() {
   # NVIM_GUI=1 nvim-qt $@ &
   # neovide --multigrid $@
@@ -404,38 +405,6 @@ ee() {
 
 stop() {
   ps -ef | rg $1 | rg -v rg | awk '{print $2}' | xargs -t -I {} kill -9 {}
-}
-
-setenv() {
-  if [ $# -ne 1 ] && [ $# -ne 2 ]; then
-    echo "Usage: setenv <key> <value>"; return 1;
-  fi
-
-  mkdir -p $MY_ENV_HOME
-  key=$1
-  value=$2
-  if [ "x$value" = "x" ]; then
-    rm -f $MY_ENV_HOME/$key
-  else
-    echo $value > $MY_ENV_HOME/$key
-  fi
-}
-
-getenv() {
-  if [ $# -gt 1 ]; then echo "Usage: getenv [key]"; return 1; fi
-
-  mkdir -p $MY_ENV_HOME
-  if [ $# -eq 1 ]; then
-    if [ ! -f "$MY_ENV_HOME/$1" ]; then echo "Error: $1 not found"; return 1; fi
-    cat "$MY_ENV_HOME/$1"
-  else
-    pushd $MY_ENV_HOME
-    for file in $(ls); do 
-      content=$(cat $file)
-      echo "$file=$content"
-    done
-    popd
-  fi
 }
 
 # refer: https://bash.cyberciti.biz/guide/Pass_arguments_into_a_function
@@ -467,27 +436,19 @@ _proxyon() {
 
   ip=$1
   port=$2
-  echo "proxyon: $ip:$port"
 
   if nc -z $ip $port; then
     export http_proxy=http://$ip:$port
     export https_proxy=http://$ip:$port
     export no_proxy=kubernetes.docker.internal,localhost,127.0.0.1,0.0.0.0,mirrors.ustc.edu.cn,mirrors.tencentyun.com
   else
-    echo "Connected to $ip:$port failed"
+    echo "_proxyon: Connected to $ip:$port failed"
     return 1
   fi
 }
 
 proxyon() {
-  endpoint=$(getenv proxy)
-  if [ $? -ne 0 ]; then
-    endpoint="127.0.0.1:1081"
-  fi
-
-  ip=$(echo $endpoint | awk -F: '{print $1}')
-  port=$(echo $endpoint | awk -F: '{print $2}')
-  _proxyon $ip $port
+  _proxyon 127.0.0.1 1081
 }
 
 proxyoff() {
@@ -505,3 +466,15 @@ fi
 if [ -f $HOME/.local/secret/config.zsh ]; then
   source $HOME/.local/secret/config.zsh
 fi
+
+if [ -f ~/.fzf.zsh ]; then
+  export PATH="$HOME/.fzf/bin:$PATH"
+  source ~/.fzf.zsh
+fi
+
+# bun completions
+[ -s "/home/cc/.bun/_bun" ] && source "/home/cc/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
