@@ -1,6 +1,8 @@
 .DS_Store
 runcom/.tmux/plugins
 runcom/.tmux/resurrect
+runcom/.env/*
+!runcom/.env/.dummy
 script/conf/macos/Brewfile.lock.json
 script/conf/macos/Caskfile.lock.json
 runcom/.gitconfig
