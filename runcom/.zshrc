@@ -186,7 +186,7 @@ fi
 # Multi line prompt
 PROMPT2="%_%% "
 # Spell miss prompt
-SPROMPT="correct> %R -> %r [n,y,a,e]? "
+# SPROMPT="correct> %R -> %r [n,y,a,e]? "
 
 # Enable syntax highlight
 # https://github.com/zdharma-continuum/fast-syntax-highlighting
@@ -207,7 +207,7 @@ setopt no_beep
 # {a-c} -> a b c
 setopt brace_ccl
 # Enable spellcheck
-setopt correct
+# setopt correct
 # Enable "=command" feature
 setopt equals
 # Disable flow control
@@ -312,8 +312,9 @@ alias df='df -h'
 alias od='od -Ax -tx1z'
 alias hexdump='hexdump -C'
 
-alias vim="TERM=xterm-256color nvim --listen $HOME/.cache/nvim/server.pipe"
-alias vi=vim
+# alias vim="TERM=xterm-256color nvim --listen $HOME/.cache/nvim/server.pipe"
+alias vim=nvim
+alias vi=nvim
 #alias goneovim='~/Downloads/goneovim/goneovim &>/dev/null &'
 #alias gn=goneovim
 #alias nvui='NVIM_GUI=1 nvui &'
@@ -322,9 +323,9 @@ if ! command -v fd > /dev/null; then
   alias fd=fdfind
 fi
 alias cdebug="cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug -DUSE_CCACHE=ON -DUSE_SANITIZER='Address;Undefined'"
-alias cbuild="cmake --build build -j"
+alias cbuild="cmake --build build -j6"
 alias cb=cbuild
-alias ct="cmake --build build -j --target"
+alias ct="cmake --build build -j6 --target"
 
 #####################################################################
 # keybinds
@@ -478,3 +479,7 @@ fi
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+export NVM_DIR="$HOME/.config/nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

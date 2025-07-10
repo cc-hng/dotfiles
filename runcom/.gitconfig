@@ -5,7 +5,7 @@
 	excludesfile = ~/.local/secret/.gitignore
 [credential]
 	helper = 
-	helper = /opt/gcm/git-credential-manager
+	helper = /usr/local/bin/git-credential-manager
 	credentialStore = gpg
 [credential "https://dev.azure.com"]
 	useHttpPath = true

@@ -47,13 +47,13 @@ check_exec stow
 install() {
   info "install os package ..."
   if is-macos; then
-    $BASEDIR/script/os/install_brew.sh
+    $BASEDIR/scripts/os/install_brew.sh
   else
-    if is-executable apt; then $BASEDIR/script/os/install_apt.sh; fi
-    if is-executable paru; then $BASEDIR/script/os/install_paru.sh; fi
+    if is-executable apt; then $BASEDIR/scripts/os/install_apt.sh; fi
+    if is-executable paru; then $BASEDIR/scripts/os/install_paru.sh; fi
   fi
   info "install zsh plugin ..."
-  $BASEDIR/script/install_zsh_plugin.sh
+  $BASEDIR/scripts/install_zsh_plugin.sh
 }
 
 link() {
